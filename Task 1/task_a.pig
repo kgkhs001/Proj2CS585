@@ -5,3 +5,5 @@ data = LOAD './Proj1/circleNetPage.csv' using PigStorage(',') AS (id:int, nickna
 grouped = GROUP data BY hobby;
 hobbyCounts = FOREACH grouped GENERATE group AS HobbyNames, COUNT(data) AS frequency;
 DUMP hobbyCounts;
+
+--STORE relation_name INTO 'output_directory_a' USING PigStorage(',');

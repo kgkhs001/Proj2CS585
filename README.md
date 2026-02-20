@@ -1,6 +1,8 @@
 # Proj2CS585
 
 # Krishna Garg
+#### AI Usage
+For AI Usage I had AI make the template code for the map reduce. This code is readily available on the internet.
 
 ### Task A Output
 Note that I only made it dump to the stdout and not save to a file
@@ -63,6 +65,7 @@ Note that I only made it dump to the stdout and not save to a file
 2026-02-18 17:10:10,709 [main] INFO  org.apache.pig.Main - Pig script completed in 40 seconds and 988 milliseconds (40988 ms)
 ```
 
+### Task C Output
 ```
 2026-02-18 17:23:42,672 [main] INFO  org.apache.pig.backend.hadoop.executionengine.util.MapRedUtil - Total input paths to process : 1
 (7,yRRppJaJOB,Marketing Manager,36,Reading)
@@ -131,6 +134,15 @@ Note that I only made it dump to the stdout and not save to a file
 (1782,qUfNWKYZkjTEnzzvuDK,IT)
 ...
 ```
+
+## Task 2 - Data Gen
+The code for this is under Task 2/data_gen.py
+The generated data has been uploaded into the hdfs environment using 
+
+```
+hdfs dfs -put input_file_location output_file_location
+```
+
 # Nathaniel Ince
 
 # Ryker Germaine

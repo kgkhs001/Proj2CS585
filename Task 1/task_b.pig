@@ -15,3 +15,5 @@ joined = JOIN top10 by page_id, pages by id USING 'replicated';
 final = FOREACH joined GENERATE pages::id, pages::nickname, pages::jobtitle;
 
 DUMP final;
+
+--STORE relation_name INTO 'output_directory_b' USING PigStorage(',');

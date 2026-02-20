@@ -6,3 +6,6 @@ users = LOAD './Proj1/circleNetPage.csv' using PigStorage(',') AS (id:int, nickn
 final = FILTER users BY hobby == 'Reading';
 
 DUMP final;
+
+
+--STORE relation_name INTO 'output_directory_c' USING PigStorage(',');
