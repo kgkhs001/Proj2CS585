@@ -134,6 +134,7 @@ Note that I only made it dump to the stdout and not save to a file
 (1782,qUfNWKYZkjTEnzzvuDK,IT)
 ...
 ```
+
 ### Task D Output
 
 ### Task E Output
@@ -146,12 +147,256 @@ Note that I only made it dump to the stdout and not save to a file
 
 
 ## Task 2 - Data Gen
+### 2.1
 The code for this is under Task 2/data_gen.py
 The generated data has been uploaded into the hdfs environment using 
 
 ```
 hdfs dfs -put input_file_location output_file_location
 ```
+
+### 2.2
+The original
+```
+1943,392780,5,4
+6997,850552,8,2
+2997,331311,6,2
+8685,254990,9,3
+3743,360014,6,0
+```
+
+a - Single Iteration
+```
+How to run:
+hdfs dfs -rm -r -f /output/kmeans_single
+hadoop jar /tmp/task2-2.jar ds503.task2.a_single.SingleIterationKMeans /input/tuples.csv /output/kmeans_single /input/tuples_2.csv
+```
+
+Calculated Centroids after one iteration
+```
+5020.043805612594,500456.58042436687,4.507871321013004,2.030800821355236	
+5124.419871794872,320291.3717948718,4.480769230769231,2.0673076923076925	
+4920.458128078818,361281.842364532,4.472906403940887,2.0098522167487687	
+4960.019541206457,810332.9745114698,4.498300764655905,1.9847068819031435	
+5092.917365269461,159019.0131736527,4.3964071856287426,2.0281437125748503
+```
+
+b - Multi Iteration (Passed in 5) -> notice I look at the fourth file because 0 is part of the indeces
+
+```
+root@810b433b1ffe:/home/ds503/shared_folder/Proj2/Task 2/2.2/target# hdfs dfs -cat /output/kmeans_multi-4/part-r-00000
+
+4970.646464646465,618980.215007215,4.471861471861472,1.9992784992784993	
+4960.504522613065,421778.2351758794,4.499497487437186,2.067336683417085	
+4989.228280407429,866038.4140203715,4.518274415817855,1.974835230677052	
+5071.770363101079,106459.70853778213,4.43179587831207,2.0853778213935232	
+5148.055853920516,264282.7948442535,4.3941997851772285,1.9656283566058002
+```
+
+c - Converging Iteration (Passed in 100) -> The program only ran 42 times since that is where conversion happened. 
+
+```
+root@810b433b1ffe:/home/ds503/shared_folder/Proj2/Task 2/2.2/target# hadoop jar task2-2-1.0-SNAPSHOT.jar ds503.task2.c_early_term.KMeansEarlyTermination ./Proj2/tuples.csv /output/kmeans_early ./Proj2/tuples_2.csv 100
+...
+root@810b433b1ffe:/home/ds503/shared_folder/Proj2/Task 2/2.2/target# hdfs dfs -ls /output
+Found 43 items
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:52 /output/kmeans_early-0
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:52 /output/kmeans_early-1
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-10
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-11
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-12
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-13
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-14
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-15
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-16
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-17
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-18
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-19
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:52 /output/kmeans_early-2
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-20
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-21
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-22
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-23
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-24
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-25
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-26
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-27
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-28
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-29
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:52 /output/kmeans_early-3
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-30
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-31
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-32
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-33
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-34
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-35
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-36
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-37
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-38
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-39
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:52 /output/kmeans_early-4
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-40
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-41
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-42
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:52 /output/kmeans_early-5
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:52 /output/kmeans_early-6
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:52 /output/kmeans_early-7
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-8
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-9
+```
+
+d - Optimized KMeans
+
+```
+...
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:18 /output/kmeans_optimized-10/_SUCCESS
+-rw-r--r--   1 root supergroup        373 2026-02-24 07:18 /output/kmeans_optimized-10/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:18 /output/kmeans_optimized-11/_SUCCESS
+-rw-r--r--   1 root supergroup        374 2026-02-24 07:18 /output/kmeans_optimized-11/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:18 /output/kmeans_optimized-12/_SUCCESS
+-rw-r--r--   1 root supergroup        367 2026-02-24 07:18 /output/kmeans_optimized-12/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:18 /output/kmeans_optimized-13/_SUCCESS
+-rw-r--r--   1 root supergroup        370 2026-02-24 07:18 /output/kmeans_optimized-13/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:18 /output/kmeans_optimized-14/_SUCCESS
+-rw-r--r--   1 root supergroup        372 2026-02-24 07:18 /output/kmeans_optimized-14/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:18 /output/kmeans_optimized-15/_SUCCESS
+-rw-r--r--   1 root supergroup        370 2026-02-24 07:18 /output/kmeans_optimized-15/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:18 /output/kmeans_optimized-16/_SUCCESS
+-rw-r--r--   1 root supergroup        368 2026-02-24 07:18 /output/kmeans_optimized-16/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:18 /output/kmeans_optimized-17/_SUCCESS
+-rw-r--r--   1 root supergroup        368 2026-02-24 07:18 /output/kmeans_optimized-17/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:18 /output/kmeans_optimized-18/_SUCCESS
+-rw-r--r--   1 root supergroup        371 2026-02-24 07:18 /output/kmeans_optimized-18/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:18 /output/kmeans_optimized-19/_SUCCESS
+-rw-r--r--   1 root supergroup        357 2026-02-24 07:18 /output/kmeans_optimized-19/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:18 /output/kmeans_optimized-2/_SUCCESS
+-rw-r--r--   1 root supergroup        369 2026-02-24 07:18 /output/kmeans_optimized-2/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:18 /output/kmeans_optimized-3/_SUCCESS
+-rw-r--r--   1 root supergroup        373 2026-02-24 07:18 /output/kmeans_optimized-3/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:18 /output/kmeans_optimized-4/_SUCCESS
+-rw-r--r--   1 root supergroup        368 2026-02-24 07:18 /output/kmeans_optimized-4/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:18 /output/kmeans_optimized-5/_SUCCESS
+-rw-r--r--   1 root supergroup        368 2026-02-24 07:18 /output/kmeans_optimized-5/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:18 /output/kmeans_optimized-6/_SUCCESS
+-rw-r--r--   1 root supergroup        370 2026-02-24 07:18 /output/kmeans_optimized-6/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:18 /output/kmeans_optimized-7/_SUCCESS
+-rw-r--r--   1 root supergroup        370 2026-02-24 07:18 /output/kmeans_optimized-7/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:18 /output/kmeans_optimized-8/_SUCCESS
+-rw-r--r--   1 root supergroup        362 2026-02-24 07:18 /output/kmeans_optimized-8/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:18 /output/kmeans_optimized-9/_SUCCESS
+-rw-r--r--   1 root supergroup        372 2026-02-24 07:18 /output/kmeans_optimized-9/part-r-00000
+root@810b433b1ffe:/home/ds503/shared_folder/Proj2/Task 2/2.2/target# 
+root@810b433b1ffe:/home/ds503/shared_folder/Proj2/Task 2/2.2/target# hadoop fs -cat /output/kmeans_optimized-4/part-r-00000
+
+root@810b433b1ffe:/home/ds503/shared_folder/Proj2/Task 2/2.2/target# hadoop fs -cat /output/kmeans_optimized-19/part-r-00000
+4961.882919005613,688611.6142742583,4.504410585404972,1.9775461106655974	
+4953.76875957121,895337.5321592649,4.519908116385912,2.0	
+5022.464850615114,494532.51054481545,4.449033391915641,2.0298769771528997	
+5057.320590790617,117052.82102519549,4.422241529105126,2.0747176368375326	
+5111.729706390328,303979.67702936096,4.447322970639033,1.9887737478411054	
+root@810b433b1ffe:/home/ds503/shared_folder/Proj2/Task 2/2.2/target# 
+```
+
+e - Output Variation
+Variation 1:
+This first one was done with 20 iterations so it did not converge.
+```
+root@810b433b1ffe:/home/ds503/shared_folder/Proj2/Task 2/2.2/target# hadoop fs -cat /output/kmeans_output_variations-variation1/results.txt
+Convergence Reached: NO
+Final Cluster Centers:
+4961.882919005613,688611.6142742583,4.504410585404972,1.9775461106655974	
+4953.76875957121,895337.5321592649,4.519908116385912,2.0	
+5022.464850615114,494532.51054481545,4.449033391915641,2.0298769771528997	
+5057.320590790617,117052.82102519549,4.422241529105126,2.0747176368375326	
+5111.729706390328,303979.67702936096,4.447322970639033,1.9887737478411054
+```
+
+
+This was done with 100 iterations so this is the output. It did converge
+```
+root@810b433b1ffe:/home/ds503/shared_folder/Proj2/Task 2/2.2/target# hadoop fs -cat /output/kmeans_output_variations-variation1/results.txt
+Convergence Reached: YES
+Final Cluster Centers:
+4941.160066006601,705848.0610561057,4.46039603960396,1.9686468646864685	
+4980.214638157895,902646.1957236842,4.527138157894737,1.997532894736842	
+5003.9084628670125,513879.55958549224,4.528497409326425,2.038860103626943	
+5040.448844884489,121905.39191419142,4.4051155115511555,2.0618811881188117	
+5128.816139767055,317467.7795341098,4.433444259567388,2.0	
+root@810b433b1ffe:/home/ds503/shared_folder/Proj2/Task 2/2.2/target# 
+```
+
+Variation 2:
+```
+root@810b433b1ffe:/home/ds503/shared_folder/Proj2/Task 2/2.2/target# hadoop fs -cat /output/kmeans_output_variations-variation2/part-m-* | head -n 20
+5683,387672,6,1	5128.816139767055,317467.7795341098,4.433444259567388,2.0
+4191,333612,0,0	5128.816139767055,317467.7795341098,4.433444259567388,2.0
+7775,669709,5,3	4941.160066006601,705848.0610561057,4.46039603960396,1.9686468646864685
+5959,753401,7,3	4941.160066006601,705848.0610561057,4.46039603960396,1.9686468646864685
+8987,713811,3,1	4941.160066006601,705848.0610561057,4.46039603960396,1.9686468646864685
+4739,564374,9,1	5003.9084628670125,513879.55958549224,4.528497409326425,2.038860103626943
+7375,920122,0,2	4980.214638157895,902646.1957236842,4.527138157894737,1.997532894736842
+463,995659,2,1	4980.214638157895,902646.1957236842,4.527138157894737,1.997532894736842
+9612,777197,2,0	4941.160066006601,705848.0610561057,4.46039603960396,1.9686468646864685
+456,35729,2,1	5040.448844884489,121905.39191419142,4.4051155115511555,2.0618811881188117
+7023,262812,7,2	5128.816139767055,317467.7795341098,4.433444259567388,2.0
+9845,177030,2,1	5040.448844884489,121905.39191419142,4.4051155115511555,2.0618811881188117
+3584,154108,7,3	5040.448844884489,121905.39191419142,4.4051155115511555,2.0618811881188117
+4308,562151,7,3	5003.9084628670125,513879.55958549224,4.528497409326425,2.038860103626943
+3522,995244,5,2	4980.214638157895,902646.1957236842,4.527138157894737,1.997532894736842
+4513,364043,8,0	5128.816139767055,317467.7795341098,4.433444259567388,2.0
+0,478412,8,0	5003.9084628670125,513879.55958549224,4.528497409326425,2.038860103626943
+8835,253116,8,1	5128.816139767055,317467.7795341098,4.433444259567388,2.0
+7490,515711,5,0	5003.9084628670125,513879.55958549224,4.528497409326425,2.038860103626943
+7658,965182,0,1	4980.214638157895,902646.1957236842,4.527138157894737,1.997532894736842
+cat: Unable to write to output stream.
+root@810b433b1ffe:/home/ds503/shared_folder/Proj2/Task 2/2.2/target# 
+```
+
+
+f - Explanation and Experiments
+### 1. Explanations
+a - This is the base k means algorithms using the map reduce methods it only runs the algorithm once. What it does is iterate through each point and compare the distance of that data point to the centroids. It then assigns the key value pair as <Centroid, data point>. This key value pair is, at this point, sent to shuffle and sort where it is then sent to the reducer. The reducer receives input formatted as such, <Centroid, List[Data points]>. The reducer then averages out the w,x,y,z values for all the points in the list and then assigns that newly calculated average point as the centroid. 
+
+b - This does exactly what a does but instead of running just once, it runs as many times as the user specifies in the terminal input. So if you input 5 into the terminal then the Map Reduce KMeans will run 5 times. It is the exact same algorithm the only major code changes are to the run function. Since we are now writing to different files each time the program loops, you have to get the new centroids from the newly outputted file. These new centroids are now passed in as input on the next iteration. The final output can be seen at file /output/...-(input -1)/part-r-0000.
+
+c - This is a build off of part b but instead of going through every iteration no matter what, it stops and doesn't proceed with the next iteration if the newly formualted centorids are within 0.1 of the previous centroids. This is then outputted to the final file as in the previous algorithm.
+
+d - This is the same as the previous algorithms but it includes a combiner which functions as a pre processor to the reducer. Instead of passing in a list of points with the centroid as the key what we pass in after the combiner is <Centroid, {sum of the w,x,y,z points with the count appended}>
+
+e - This formats the file output to just the final centroid and tells if the final output was reached due to convergence or not. Then for the second variation, it runs a map only job that assigns each data point to their respective cluster. 
+
+
+### 2. Conducting Experiments & Performance Analysis
+
+**Varying R (Max Iterations):**
+*   *Experiment:* Run Algorithm (b) Fixed-Iteration with R=100. Run Algorithm (c) Early-Termination with R=100.
+*   *Finding:* As seen in the Task (c) output in the README, Early Termination detected convergence after 42 iterations and successfully halted, whereas (b) would have blindly kept running.
+*   *Analysis:* Early-termination avoids 58 completely redundant MapReduce jobs, proving that implementing state-checking (via Hadoop Counters) natively improves runtime efficiency by eliminating unnecessary static assignments.
+
+**Relative Performance (Combiner vs No Combiner):**
+*   *Experiment/Analysis:* By using the Combiner in Algorithm (d), the execution of MapReduce jobs is significantly faster. Because the Combiner pre-aggregates points into a single sum vector plus a count per Mapper, the amount of data written to disk, shuffled across the network, and processed by the Reducer is exponentially smaller compared to (c) which sends every single row of data independently. This decreases both memory load and network bottlenecking.
+
+**Varying K (Number of Clusters):**
+*   *Analysis:* By running the model with a tiny K (e.g. $K=2$), we expect the algorithm to converge slightly faster, but the clustering boundaries will be very broad and generalize the data heavily. With a larger K (e.g. $K=10$), computation time per Map task increases slightly (because distance must be checked against 10 centroids instead of 2 or 5). Furthermore with more centroids, the system is prone to taking more overall iterations to formally converge as cluster boundaries are tighter and points shift assignments more frequently.
+
 
 # Nathaniel Ince
 
