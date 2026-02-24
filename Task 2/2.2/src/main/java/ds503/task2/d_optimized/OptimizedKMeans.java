@@ -1,5 +1,5 @@
 //Krishna Garg
-package ds503.task2.a_single;
+package ds503.task2.d_optimized;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
@@ -21,9 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.hadoop.fs.FileSystem;
 import java.lang.Math;
-import java.util.PriorityQueue;
 
-public class SingleIterationKMeans extends Configured implements Tool {
+public class OptimizedKMeans extends Configured implements Tool {
     public static class Point {
         double w, x, y, z;
         
@@ -73,6 +72,7 @@ public class SingleIterationKMeans extends Configured implements Tool {
             Point point = new Point(fileValues[0], fileValues[1], fileValues[2], fileValues[3]);
             Double smallest = Double.MAX_VALUE;
             Point smallestPoint = null;
+            
             for (Point i : Centroids){
                 Double dist = point.findDistance(i);
                 if(dist < smallest){
@@ -81,20 +81,14 @@ public class SingleIterationKMeans extends Configured implements Tool {
                 }
             }
             if (smallestPoint != null) {
-            context.write(new Text(smallestPoint.retString()), value);
+                context.write(new Text(smallestPoint.retString()), new Text(value.toString() + ",1"));
             }
         }
     }
-
-    // Reducer Class
-    public static class KMeansReducer extends Reducer<Text, Text, Text, Text> {
-        
+    public static class KMeansCombiner extends Reducer<Text, Text, Text, Text> {
         public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
-            Integer count = 0;
-            double w = 0;
-            double x = 0;
-            double y = 0;
-            double z = 0;
+            int count = 0;
+            double w = 0, x = 0, y = 0, z = 0;
 
             for(Text i : values){
                 String[] valueString = i.toString().split(",");
@@ -102,49 +96,87 @@ public class SingleIterationKMeans extends Configured implements Tool {
                 x += Double.parseDouble(valueString[1]);
                 y += Double.parseDouble(valueString[2]);
                 z += Double.parseDouble(valueString[3]);
-                count++;
+                count += Integer.parseInt(valueString[4]); // Add up the partial counts
             }
+            
+            context.write(key, new Text(w + "," + x + "," + y + "," + z + "," + count));
+        }
+    }
+
+    public static class KMeansReducer extends Reducer<Text, Text, Text, Text> {
+        public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
+            String[] keyVals = key.toString().split(",");
+            Point oldPoint = new Point(keyVals[0], keyVals[1], keyVals[2], keyVals[3]);
+            
+            int count = 0;
+            double w = 0, x = 0, y = 0, z = 0;
+
+            for(Text i : values){
+                String[] valueString = i.toString().split(",");
+                w += Double.parseDouble(valueString[0]);
+                x += Double.parseDouble(valueString[1]);
+                y += Double.parseDouble(valueString[2]);
+                z += Double.parseDouble(valueString[3]);
+                count += Integer.parseInt(valueString[4]);
+            }
+            
             Point newPoint = new Point(String.valueOf(w/count), String.valueOf(x/count), String.valueOf(y/count), String.valueOf(z/count));
+            
+            double distance = oldPoint.findDistance(newPoint);
+            if (distance > 0.1){
+                context.getCounter("KMEANS", "CENTROIDS_MOVED").increment(1);
+            }
             context.write(new Text(newPoint.retString()), new Text(""));
         }
-
     }
 
     public int run(String[] args) throws Exception {
-        Configuration conf = getConf();
-        
-        if (args.length != 3) {
-            System.err.println("Usage: SingleIterationKMeans <input> <output> <centroid>");
+        if (args.length != 4) {
+            System.err.println("Usage: OptimizedKMeans <input> <output_base> <centroid> <num_iterations>");
             System.exit(2);
         }
-        
-        conf.set("centroid.path", args[2]);
 
-        Job job = Job.getInstance(conf, "Single Iteration KMeans");
-        job.setJarByClass(SingleIterationKMeans.class);
+        Path input = new Path(args[0]);
+        String outputBase = args[1];
+        String centroids = args[2];
+        int runTimes = Integer.parseInt(args[3]);
 
-        job.setMapperClass(KMeansMapper.class);
-        job.setReducerClass(KMeansReducer.class);
+        for (int i = 0; i < runTimes; i++) {
+            Configuration conf = getConf();
+            conf.set("centroid.path", centroids);
 
-        job.setOutputKeyClass(Text.class);
-        job.setOutputValueClass(Text.class);
+            Job job = Job.getInstance(conf, "Optimized KMeans - Iteration " + i);
+            job.setJarByClass(OptimizedKMeans.class);
 
-        FileInputFormat.addInputPath(job, new Path(args[0]));
-        FileOutputFormat.setOutputPath(job, new Path(args[1]));
+            job.setMapperClass(KMeansMapper.class);
+            job.setCombinerClass(KMeansCombiner.class);
+            job.setReducerClass(KMeansReducer.class);
 
-        return job.waitForCompletion(true) ? 0 : 1;
+            job.setOutputKeyClass(Text.class);
+            job.setOutputValueClass(Text.class);
+
+            FileInputFormat.addInputPath(job, input);
+            FileOutputFormat.setOutputPath(job, new Path(outputBase + "-" + i));
+
+            boolean success = job.waitForCompletion(true);
+            if (!success) {
+                return 1;
+            }
+
+            long movedCentroids = job.getCounters().findCounter("KMEANS", "CENTROIDS_MOVED").getValue();
+            if (movedCentroids == 0) {
+                System.out.println("Convergence reached after " + (i + 1) + " iterations!");
+                break;
+            }
+
+            centroids = outputBase + "-" + i + "/part-r-00000";
+        }
+
+        return 0;
     }
 
     public static void main(String[] args) throws Exception {
-        int res = ToolRunner.run(new Configuration(), new SingleIterationKMeans(), args);
+        int res = ToolRunner.run(new Configuration(), new OptimizedKMeans(), args);
         System.exit(res);
     }
 }
-
-
-
-/*
-How to run:
-hdfs dfs -rm -r -f /output/kmeans_single
-hadoop jar /tmp/task2-2.jar ds503.task2.a_single.SingleIterationKMeans /input/tuples.csv /output/kmeans_single /input/tuples_2.csv
-*/

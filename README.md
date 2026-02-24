@@ -136,6 +136,7 @@ Note that I only made it dump to the stdout and not save to a file
 ```
 
 ## Task 2 - Data Gen
+### 2.1
 The code for this is under Task 2/data_gen.py
 The generated data has been uploaded into the hdfs environment using 
 
@@ -143,6 +144,101 @@ The generated data has been uploaded into the hdfs environment using
 hdfs dfs -put input_file_location output_file_location
 ```
 
+### 2.2
+The original
+```
+1943,392780,5,4
+6997,850552,8,2
+2997,331311,6,2
+8685,254990,9,3
+3743,360014,6,0
+```
+
+Single Iteration
+```
+How to run:
+hdfs dfs -rm -r -f /output/kmeans_single
+hadoop jar /tmp/task2-2.jar ds503.task2.a_single.SingleIterationKMeans /input/tuples.csv /output/kmeans_single /input/tuples_2.csv
+```
+
+Calculated Centroids after one iteration
+```
+5020.043805612594,500456.58042436687,4.507871321013004,2.030800821355236	
+5124.419871794872,320291.3717948718,4.480769230769231,2.0673076923076925	
+4920.458128078818,361281.842364532,4.472906403940887,2.0098522167487687	
+4960.019541206457,810332.9745114698,4.498300764655905,1.9847068819031435	
+5092.917365269461,159019.0131736527,4.3964071856287426,2.0281437125748503
+```
+
+Multi Iteration (Passed in 5) -> notice I look at the fourth file because 0 is part of the indeces
+
+```
+root@810b433b1ffe:/home/ds503/shared_folder/Proj2/Task 2/2.2/target# hdfs dfs -cat /output/kmeans_multi-4/part-r-00000
+
+4970.646464646465,618980.215007215,4.471861471861472,1.9992784992784993	
+4960.504522613065,421778.2351758794,4.499497487437186,2.067336683417085	
+4989.228280407429,866038.4140203715,4.518274415817855,1.974835230677052	
+5071.770363101079,106459.70853778213,4.43179587831207,2.0853778213935232	
+5148.055853920516,264282.7948442535,4.3941997851772285,1.9656283566058002
+```
+
+Converging Iteration (Passed in 100) -> The program only ran 42 times since that is where conversion happened. 
+
+```
+root@810b433b1ffe:/home/ds503/shared_folder/Proj2/Task 2/2.2/target# hadoop jar task2-2-1.0-SNAPSHOT.jar ds503.task2.c_early_term.KMeansEarlyTermination ./Proj2/tuples.csv /output/kmeans_early ./Proj2/tuples_2.csv 100
+...
+root@810b433b1ffe:/home/ds503/shared_folder/Proj2/Task 2/2.2/target# hdfs dfs -ls /output
+Found 43 items
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:52 /output/kmeans_early-0
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:52 /output/kmeans_early-1
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-10
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-11
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-12
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-13
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-14
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-15
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-16
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-17
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-18
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-19
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:52 /output/kmeans_early-2
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-20
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-21
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-22
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-23
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-24
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-25
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-26
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-27
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-28
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-29
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:52 /output/kmeans_early-3
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-30
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-31
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-32
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-33
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-34
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-35
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-36
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-37
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-38
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-39
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:52 /output/kmeans_early-4
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-40
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-41
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-42
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:52 /output/kmeans_early-5
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:52 /output/kmeans_early-6
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:52 /output/kmeans_early-7
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-8
+drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-9
+```
+
+Optimized KMeans
+
+```
+
+```
 # Nathaniel Ince
 
 # Ryker Germaine
