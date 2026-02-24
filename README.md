@@ -134,6 +134,16 @@ Note that I only made it dump to the stdout and not save to a file
 (1782,qUfNWKYZkjTEnzzvuDK,IT)
 ...
 ```
+### Task D Output
+
+### Task E Output
+
+### Task F Output
+
+### Task G Output
+
+### Task H Output
+
 
 ## Task 2 - Data Gen
 The code for this is under Task 2/data_gen.py
@@ -145,7 +155,7 @@ hdfs dfs -put input_file_location output_file_location
 
 # Nathaniel Ince
 
-# Ryker Germaine
+# Ryker Germain
 
 ## Run the PIG Scripts
 
