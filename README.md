@@ -134,6 +134,16 @@ Note that I only made it dump to the stdout and not save to a file
 (1782,qUfNWKYZkjTEnzzvuDK,IT)
 ...
 ```
+### Task D Output
+
+### Task E Output
+
+### Task F Output
+
+### Task G Output
+
+### Task H Output
+
 
 ## Task 2 - Data Gen
 ### 2.1
@@ -241,7 +251,7 @@ Optimized KMeans
 ```
 # Nathaniel Ince
 
-# Ryker Germaine
+# Ryker Germain
 
 ## Run the PIG Scripts
 
