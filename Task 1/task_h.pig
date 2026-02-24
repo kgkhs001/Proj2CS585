@@ -4,7 +4,7 @@
 
 -- Load Data
 Pages = LOAD './Proj1/circleNetPage.csv' using PigStorage(',') AS (id:int, nickname:chararray, jobtitle:chararray, regioncode:int, hobby:chararray);
-Follows = LOAD './Proj1/follows.csv' USING PigStorage(',') AS (relId:int, id1:int, id2:int, date:int, desc:chararray);
+Follows = LOAD './Proj1/follows.csv' USING PigStorage(',') AS (colRel:int, id1:int, id2:int, date:int, desc:chararray);
 
 -- Join Follows with Pages twice to get RegionCode for both ID1 and ID2
 F_With_Reg1 = JOIN Follows BY id1, Pages BY id;
