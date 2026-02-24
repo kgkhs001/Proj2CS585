@@ -7,7 +7,7 @@ Pages = LOAD './Proj1/circleNetPage.csv' using PigStorage(',') AS (id:int, nickn
 Follows = LOAD './Proj1/follows.csv' USING PigStorage(',') AS (colRel:int, id1:int, id2:int, date:int, desc:chararray);
 
 -- Count followers for each followed ID
-FollowerCounts = GROUP Follows BY followedId;
+FollowerCounts = GROUP Follows BY id2;
 Counts = FOREACH FollowerCounts GENERATE group AS ownerId, COUNT(Follows) AS numFollowers;
 
 -- Calculate Global Average
@@ -18,6 +18,6 @@ AvgStats = FOREACH AllGroups GENERATE AVG(Counts.numFollowers) AS globalAvg;
 FilteredOwners = FILTER Counts BY numFollowers > AvgStats.globalAvg;
 
 -- Join back to get names
-Result = JOIN FilteredOwners BY ownerId, Pages BY ownerId;
-Final = FOREACH Result GENERATE Pages::ownerId, Pages::nickname;
+Result = JOIN FilteredOwners BY ownerId, Pages BY id;
+Final = FOREACH Result GENERATE Pages::id AS ownerId, Pages::nickname;
 STORE Final INTO 'task_f_output';
