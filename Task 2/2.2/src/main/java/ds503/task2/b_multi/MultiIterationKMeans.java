@@ -81,7 +81,6 @@ public class MultiIterationKMeans extends Configured implements Tool {
                     smallestPoint = i;
                 }
             }
-            // Once association is made then push this to the reducer in a <Centroid, DataPoint> format
             if (smallestPoint != null) {
                 context.write(new Text(smallestPoint.retString()), value);
             }
