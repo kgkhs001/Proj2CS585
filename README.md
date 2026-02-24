@@ -2,7 +2,7 @@
 
 # Krishna Garg
 #### AI Usage
-For AI Usage I had AI make the template code for the map reduce. This code is readily available on the internet.
+For AI Usage I had AI make the template code for the map reduce. This code is readily available on the internet. It also helped me think out ideas about how to implement the combiner but the rest of the logic was my own. 
 
 ### Task A Output
 Note that I only made it dump to the stdout and not save to a file
@@ -389,14 +389,394 @@ e - This formats the file output to just the final centroid and tells if the fin
 **Varying R (Max Iterations):**
 *   *Experiment:* Run Algorithm (b) Fixed-Iteration with R=100. Run Algorithm (c) Early-Termination with R=100.
 *   *Finding:* As seen in the Task (c) output in the README, Early Termination detected convergence after 42 iterations and successfully halted, whereas (b) would have blindly kept running.
-*   *Analysis:* Early-termination avoids 58 completely redundant MapReduce jobs, proving that implementing state-checking (via Hadoop Counters) natively improves runtime efficiency by eliminating unnecessary static assignments.
+*   *Analysis:* Early-termination avoids 50-100 completely redundant MapReduce jobs, proving that implementing state-checking natively improves runtime efficiency by eliminating unnecessary static assignments.
 
 **Relative Performance (Combiner vs No Combiner):**
 *   *Experiment/Analysis:* By using the Combiner in Algorithm (d), the execution of MapReduce jobs is significantly faster. Because the Combiner pre-aggregates points into a single sum vector plus a count per Mapper, the amount of data written to disk, shuffled across the network, and processed by the Reducer is exponentially smaller compared to (c) which sends every single row of data independently. This decreases both memory load and network bottlenecking.
 
 **Varying K (Number of Clusters):**
-*   *Analysis:* By running the model with a tiny K (e.g. $K=2$), we expect the algorithm to converge slightly faster, but the clustering boundaries will be very broad and generalize the data heavily. With a larger K (e.g. $K=10$), computation time per Map task increases slightly (because distance must be checked against 10 centroids instead of 2 or 5). Furthermore with more centroids, the system is prone to taking more overall iterations to formally converge as cluster boundaries are tighter and points shift assignments more frequently.
+*   *Analysis:* By running the model with a tiny K (e.g. K=2), we expect the algorithm to converge slightly faster, but the clustering boundaries will be very broad and generalize the data heavily. With a larger K (e.g. K=10), computation time per Map task increases slightly (because distance must be checked against 10 centroids instead of 2 or 5). Furthermore with more centroids, the system is prone to taking more overall iterations to formally converge as cluster boundaries are tighter and points shift assignments more frequently.
 
+
+```
+This is what happened when there were 5 clusters. TLDR: when the early termination algorithm was run with a value for 100, it only ran 43 times.
+
+hadoop jar task2-2-1.0-SNAPSHOT.jar ds503.task2.c_early_term.KMeansEarlyTermination ./Proj2/tuples.csv /output/kmeans_early ./Proj2/tuples_2.csv 100
+
+root@810b433b1ffe:/home/ds503/shared_folder/Proj2/Task 2/2.2/target# hdfs dfs -ls /output/kmeans*       
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 19:41 /output/kmeans_early-0/_SUCCESS
+-rw-r--r--   1 root supergroup        370 2026-02-24 19:41 /output/kmeans_early-0/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 19:41 /output/kmeans_early-1/_SUCCESS
+-rw-r--r--   1 root supergroup        373 2026-02-24 19:41 /output/kmeans_early-1/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 19:42 /output/kmeans_early-10/_SUCCESS
+-rw-r--r--   1 root supergroup        373 2026-02-24 19:42 /output/kmeans_early-10/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 19:42 /output/kmeans_early-11/_SUCCESS
+-rw-r--r--   1 root supergroup        374 2026-02-24 19:42 /output/kmeans_early-11/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 19:42 /output/kmeans_early-12/_SUCCESS
+-rw-r--r--   1 root supergroup        367 2026-02-24 19:42 /output/kmeans_early-12/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 19:42 /output/kmeans_early-13/_SUCCESS
+-rw-r--r--   1 root supergroup        370 2026-02-24 19:42 /output/kmeans_early-13/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 19:42 /output/kmeans_early-14/_SUCCESS
+-rw-r--r--   1 root supergroup        372 2026-02-24 19:42 /output/kmeans_early-14/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 19:42 /output/kmeans_early-15/_SUCCESS
+-rw-r--r--   1 root supergroup        370 2026-02-24 19:42 /output/kmeans_early-15/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 19:42 /output/kmeans_early-16/_SUCCESS
+-rw-r--r--   1 root supergroup        368 2026-02-24 19:42 /output/kmeans_early-16/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 19:42 /output/kmeans_early-17/_SUCCESS
+-rw-r--r--   1 root supergroup        368 2026-02-24 19:42 /output/kmeans_early-17/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 19:42 /output/kmeans_early-18/_SUCCESS
+-rw-r--r--   1 root supergroup        371 2026-02-24 19:42 /output/kmeans_early-18/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 19:42 /output/kmeans_early-19/_SUCCESS
+-rw-r--r--   1 root supergroup        357 2026-02-24 19:42 /output/kmeans_early-19/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 19:41 /output/kmeans_early-2/_SUCCESS
+-rw-r--r--   1 root supergroup        369 2026-02-24 19:41 /output/kmeans_early-2/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 19:42 /output/kmeans_early-20/_SUCCESS
+-rw-r--r--   1 root supergroup        370 2026-02-24 19:42 /output/kmeans_early-20/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 19:42 /output/kmeans_early-21/_SUCCESS
+-rw-r--r--   1 root supergroup        369 2026-02-24 19:42 /output/kmeans_early-21/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 19:42 /output/kmeans_early-22/_SUCCESS
+-rw-r--r--   1 root supergroup        365 2026-02-24 19:42 /output/kmeans_early-22/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 19:42 /output/kmeans_early-23/_SUCCESS
+-rw-r--r--   1 root supergroup        370 2026-02-24 19:42 /output/kmeans_early-23/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 19:42 /output/kmeans_early-24/_SUCCESS
+-rw-r--r--   1 root supergroup        372 2026-02-24 19:42 /output/kmeans_early-24/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 19:42 /output/kmeans_early-25/_SUCCESS
+-rw-r--r--   1 root supergroup        369 2026-02-24 19:42 /output/kmeans_early-25/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 19:42 /output/kmeans_early-26/_SUCCESS
+-rw-r--r--   1 root supergroup        372 2026-02-24 19:42 /output/kmeans_early-26/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 19:42 /output/kmeans_early-27/_SUCCESS
+-rw-r--r--   1 root supergroup        371 2026-02-24 19:42 /output/kmeans_early-27/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 19:42 /output/kmeans_early-28/_SUCCESS
+-rw-r--r--   1 root supergroup        371 2026-02-24 19:42 /output/kmeans_early-28/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 19:42 /output/kmeans_early-29/_SUCCESS
+-rw-r--r--   1 root supergroup        372 2026-02-24 19:42 /output/kmeans_early-29/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 19:41 /output/kmeans_early-3/_SUCCESS
+-rw-r--r--   1 root supergroup        373 2026-02-24 19:41 /output/kmeans_early-3/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 19:42 /output/kmeans_early-30/_SUCCESS
+-rw-r--r--   1 root supergroup        371 2026-02-24 19:42 /output/kmeans_early-30/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 19:42 /output/kmeans_early-31/_SUCCESS
+-rw-r--r--   1 root supergroup        373 2026-02-24 19:42 /output/kmeans_early-31/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 19:42 /output/kmeans_early-32/_SUCCESS
+-rw-r--r--   1 root supergroup        357 2026-02-24 19:42 /output/kmeans_early-32/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 19:42 /output/kmeans_early-33/_SUCCESS
+-rw-r--r--   1 root supergroup        370 2026-02-24 19:42 /output/kmeans_early-33/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 19:42 /output/kmeans_early-34/_SUCCESS
+-rw-r--r--   1 root supergroup        372 2026-02-24 19:42 /output/kmeans_early-34/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 19:42 /output/kmeans_early-35/_SUCCESS
+-rw-r--r--   1 root supergroup        371 2026-02-24 19:42 /output/kmeans_early-35/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 19:42 /output/kmeans_early-36/_SUCCESS
+-rw-r--r--   1 root supergroup        368 2026-02-24 19:42 /output/kmeans_early-36/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 19:42 /output/kmeans_early-37/_SUCCESS
+-rw-r--r--   1 root supergroup        371 2026-02-24 19:42 /output/kmeans_early-37/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 19:42 /output/kmeans_early-38/_SUCCESS
+-rw-r--r--   1 root supergroup        369 2026-02-24 19:42 /output/kmeans_early-38/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 19:42 /output/kmeans_early-39/_SUCCESS
+-rw-r--r--   1 root supergroup        370 2026-02-24 19:42 /output/kmeans_early-39/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 19:41 /output/kmeans_early-4/_SUCCESS
+-rw-r--r--   1 root supergroup        368 2026-02-24 19:41 /output/kmeans_early-4/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 19:42 /output/kmeans_early-40/_SUCCESS
+-rw-r--r--   1 root supergroup        369 2026-02-24 19:42 /output/kmeans_early-40/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 19:42 /output/kmeans_early-41/_SUCCESS
+-rw-r--r--   1 root supergroup        356 2026-02-24 19:42 /output/kmeans_early-41/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 19:42 /output/kmeans_early-42/_SUCCESS
+-rw-r--r--   1 root supergroup        356 2026-02-24 19:42 /output/kmeans_early-42/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 19:41 /output/kmeans_early-5/_SUCCESS
+-rw-r--r--   1 root supergroup        368 2026-02-24 19:41 /output/kmeans_early-5/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 19:41 /output/kmeans_early-6/_SUCCESS
+-rw-r--r--   1 root supergroup        370 2026-02-24 19:41 /output/kmeans_early-6/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 19:41 /output/kmeans_early-7/_SUCCESS
+-rw-r--r--   1 root supergroup        370 2026-02-24 19:41 /output/kmeans_early-7/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 19:41 /output/kmeans_early-8/_SUCCESS
+-rw-r--r--   1 root supergroup        362 2026-02-24 19:41 /output/kmeans_early-8/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 19:41 /output/kmeans_early-9/_SUCCESS
+-rw-r--r--   1 root supergroup        372 2026-02-24 19:41 /output/kmeans_early-9/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:22 /output/kmeans_output_variations-0/_SUCCESS
+-rw-r--r--   1 root supergroup        370 2026-02-24 07:22 /output/kmeans_output_variations-0/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:22 /output/kmeans_output_variations-1/_SUCCESS
+-rw-r--r--   1 root supergroup        373 2026-02-24 07:22 /output/kmeans_output_variations-1/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:22 /output/kmeans_output_variations-10/_SUCCESS
+-rw-r--r--   1 root supergroup        373 2026-02-24 07:22 /output/kmeans_output_variations-10/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:22 /output/kmeans_output_variations-11/_SUCCESS
+-rw-r--r--   1 root supergroup        374 2026-02-24 07:22 /output/kmeans_output_variations-11/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:22 /output/kmeans_output_variations-12/_SUCCESS
+-rw-r--r--   1 root supergroup        367 2026-02-24 07:22 /output/kmeans_output_variations-12/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:22 /output/kmeans_output_variations-13/_SUCCESS
+-rw-r--r--   1 root supergroup        370 2026-02-24 07:22 /output/kmeans_output_variations-13/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:22 /output/kmeans_output_variations-14/_SUCCESS
+-rw-r--r--   1 root supergroup        372 2026-02-24 07:22 /output/kmeans_output_variations-14/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:22 /output/kmeans_output_variations-15/_SUCCESS
+-rw-r--r--   1 root supergroup        370 2026-02-24 07:22 /output/kmeans_output_variations-15/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:22 /output/kmeans_output_variations-16/_SUCCESS
+-rw-r--r--   1 root supergroup        368 2026-02-24 07:22 /output/kmeans_output_variations-16/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:22 /output/kmeans_output_variations-17/_SUCCESS
+-rw-r--r--   1 root supergroup        368 2026-02-24 07:22 /output/kmeans_output_variations-17/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:22 /output/kmeans_output_variations-18/_SUCCESS
+-rw-r--r--   1 root supergroup        371 2026-02-24 07:22 /output/kmeans_output_variations-18/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:23 /output/kmeans_output_variations-19/_SUCCESS
+-rw-r--r--   1 root supergroup        357 2026-02-24 07:23 /output/kmeans_output_variations-19/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:22 /output/kmeans_output_variations-2/_SUCCESS
+-rw-r--r--   1 root supergroup        369 2026-02-24 07:22 /output/kmeans_output_variations-2/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:23 /output/kmeans_output_variations-20/_SUCCESS
+-rw-r--r--   1 root supergroup        370 2026-02-24 07:23 /output/kmeans_output_variations-20/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:23 /output/kmeans_output_variations-21/_SUCCESS
+-rw-r--r--   1 root supergroup        369 2026-02-24 07:23 /output/kmeans_output_variations-21/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:23 /output/kmeans_output_variations-22/_SUCCESS
+-rw-r--r--   1 root supergroup        365 2026-02-24 07:23 /output/kmeans_output_variations-22/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:23 /output/kmeans_output_variations-23/_SUCCESS
+-rw-r--r--   1 root supergroup        370 2026-02-24 07:23 /output/kmeans_output_variations-23/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:23 /output/kmeans_output_variations-24/_SUCCESS
+-rw-r--r--   1 root supergroup        372 2026-02-24 07:23 /output/kmeans_output_variations-24/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:23 /output/kmeans_output_variations-25/_SUCCESS
+-rw-r--r--   1 root supergroup        369 2026-02-24 07:23 /output/kmeans_output_variations-25/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:23 /output/kmeans_output_variations-26/_SUCCESS
+-rw-r--r--   1 root supergroup        372 2026-02-24 07:23 /output/kmeans_output_variations-26/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:23 /output/kmeans_output_variations-27/_SUCCESS
+-rw-r--r--   1 root supergroup        371 2026-02-24 07:23 /output/kmeans_output_variations-27/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:23 /output/kmeans_output_variations-28/_SUCCESS
+-rw-r--r--   1 root supergroup        371 2026-02-24 07:23 /output/kmeans_output_variations-28/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:23 /output/kmeans_output_variations-29/_SUCCESS
+-rw-r--r--   1 root supergroup        372 2026-02-24 07:23 /output/kmeans_output_variations-29/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:22 /output/kmeans_output_variations-3/_SUCCESS
+-rw-r--r--   1 root supergroup        373 2026-02-24 07:22 /output/kmeans_output_variations-3/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:23 /output/kmeans_output_variations-30/_SUCCESS
+-rw-r--r--   1 root supergroup        371 2026-02-24 07:23 /output/kmeans_output_variations-30/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:23 /output/kmeans_output_variations-31/_SUCCESS
+-rw-r--r--   1 root supergroup        373 2026-02-24 07:23 /output/kmeans_output_variations-31/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:23 /output/kmeans_output_variations-32/_SUCCESS
+-rw-r--r--   1 root supergroup        357 2026-02-24 07:23 /output/kmeans_output_variations-32/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:23 /output/kmeans_output_variations-33/_SUCCESS
+-rw-r--r--   1 root supergroup        370 2026-02-24 07:23 /output/kmeans_output_variations-33/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:23 /output/kmeans_output_variations-34/_SUCCESS
+-rw-r--r--   1 root supergroup        372 2026-02-24 07:23 /output/kmeans_output_variations-34/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:23 /output/kmeans_output_variations-35/_SUCCESS
+-rw-r--r--   1 root supergroup        371 2026-02-24 07:23 /output/kmeans_output_variations-35/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:23 /output/kmeans_output_variations-36/_SUCCESS
+-rw-r--r--   1 root supergroup        368 2026-02-24 07:23 /output/kmeans_output_variations-36/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:23 /output/kmeans_output_variations-37/_SUCCESS
+-rw-r--r--   1 root supergroup        371 2026-02-24 07:23 /output/kmeans_output_variations-37/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:23 /output/kmeans_output_variations-38/_SUCCESS
+-rw-r--r--   1 root supergroup        369 2026-02-24 07:23 /output/kmeans_output_variations-38/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:23 /output/kmeans_output_variations-39/_SUCCESS
+-rw-r--r--   1 root supergroup        370 2026-02-24 07:23 /output/kmeans_output_variations-39/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:22 /output/kmeans_output_variations-4/_SUCCESS
+-rw-r--r--   1 root supergroup        368 2026-02-24 07:22 /output/kmeans_output_variations-4/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:23 /output/kmeans_output_variations-40/_SUCCESS
+-rw-r--r--   1 root supergroup        369 2026-02-24 07:23 /output/kmeans_output_variations-40/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:23 /output/kmeans_output_variations-41/_SUCCESS
+-rw-r--r--   1 root supergroup        356 2026-02-24 07:23 /output/kmeans_output_variations-41/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:23 /output/kmeans_output_variations-42/_SUCCESS
+-rw-r--r--   1 root supergroup        356 2026-02-24 07:23 /output/kmeans_output_variations-42/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:22 /output/kmeans_output_variations-5/_SUCCESS
+-rw-r--r--   1 root supergroup        368 2026-02-24 07:22 /output/kmeans_output_variations-5/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:22 /output/kmeans_output_variations-6/_SUCCESS
+-rw-r--r--   1 root supergroup        370 2026-02-24 07:22 /output/kmeans_output_variations-6/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:22 /output/kmeans_output_variations-7/_SUCCESS
+-rw-r--r--   1 root supergroup        370 2026-02-24 07:22 /output/kmeans_output_variations-7/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:22 /output/kmeans_output_variations-8/_SUCCESS
+-rw-r--r--   1 root supergroup        362 2026-02-24 07:22 /output/kmeans_output_variations-8/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:22 /output/kmeans_output_variations-9/_SUCCESS
+-rw-r--r--   1 root supergroup        372 2026-02-24 07:22 /output/kmeans_output_variations-9/part-r-00000
+Found 1 items
+-rw-r--r--   1 root supergroup        404 2026-02-24 07:23 /output/kmeans_output_variations-variation1/results.txt
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:23 /output/kmeans_output_variations-variation2/_SUCCESS
+-rw-r--r--   1 root supergroup     516034 2026-02-24 07:23 /output/kmeans_output_variations-variation2/part-m-00000
+
+
+Then for the second run we had 10 clusters (2x more than the last run) and ran the same command:
+hadoop jar task2-2-1.0-SNAPSHOT.jar ds503.task2.c_early_term.KMeansEarlyTermination ./Proj2/tuples.csv /output/kmeans_early ./Proj2/tuples_2.csv 100
+
+This time it ran all iterations of the program, since there are more clusters. 
+
+^Croot@810b433b1ffe:/home/ds503/shared_folder/Proj2/Task 2/2.2/target# hdfs dfs -ls /output/
+Found 100 items
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:01 /output/kmeans_early-0
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:02 /output/kmeans_early-1
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:02 /output/kmeans_early-10
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:02 /output/kmeans_early-11
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:02 /output/kmeans_early-12
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:02 /output/kmeans_early-13
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:02 /output/kmeans_early-14
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:02 /output/kmeans_early-15
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:02 /output/kmeans_early-16
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:02 /output/kmeans_early-17
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:02 /output/kmeans_early-18
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:02 /output/kmeans_early-19
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:02 /output/kmeans_early-2
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:02 /output/kmeans_early-20
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:02 /output/kmeans_early-21
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:02 /output/kmeans_early-22
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:02 /output/kmeans_early-23
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:02 /output/kmeans_early-24
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:02 /output/kmeans_early-25
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:02 /output/kmeans_early-26
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:02 /output/kmeans_early-27
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:02 /output/kmeans_early-28
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:02 /output/kmeans_early-29
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:02 /output/kmeans_early-3
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:02 /output/kmeans_early-30
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:02 /output/kmeans_early-31
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:02 /output/kmeans_early-32
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:02 /output/kmeans_early-33
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:02 /output/kmeans_early-34
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:02 /output/kmeans_early-35
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:02 /output/kmeans_early-36
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:02 /output/kmeans_early-37
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:02 /output/kmeans_early-38
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:02 /output/kmeans_early-39
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:02 /output/kmeans_early-4
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:02 /output/kmeans_early-40
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:02 /output/kmeans_early-41
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:02 /output/kmeans_early-42
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:02 /output/kmeans_early-43
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:02 /output/kmeans_early-44
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:02 /output/kmeans_early-45
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:02 /output/kmeans_early-46
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:02 /output/kmeans_early-47
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:02 /output/kmeans_early-48
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:02 /output/kmeans_early-49
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:02 /output/kmeans_early-5
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:02 /output/kmeans_early-50
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:03 /output/kmeans_early-51
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:03 /output/kmeans_early-52
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:03 /output/kmeans_early-53
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:03 /output/kmeans_early-54
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:03 /output/kmeans_early-55
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:03 /output/kmeans_early-56
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:03 /output/kmeans_early-57
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:03 /output/kmeans_early-58
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:03 /output/kmeans_early-59
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:02 /output/kmeans_early-6
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:03 /output/kmeans_early-60
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:03 /output/kmeans_early-61
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:03 /output/kmeans_early-62
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:03 /output/kmeans_early-63
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:03 /output/kmeans_early-64
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:03 /output/kmeans_early-65
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:03 /output/kmeans_early-66
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:03 /output/kmeans_early-67
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:03 /output/kmeans_early-68
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:03 /output/kmeans_early-69
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:02 /output/kmeans_early-7
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:03 /output/kmeans_early-70
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:03 /output/kmeans_early-71
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:03 /output/kmeans_early-72
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:03 /output/kmeans_early-73
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:03 /output/kmeans_early-74
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:03 /output/kmeans_early-75
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:03 /output/kmeans_early-76
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:03 /output/kmeans_early-77
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:03 /output/kmeans_early-78
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:03 /output/kmeans_early-79
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:02 /output/kmeans_early-8
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:03 /output/kmeans_early-80
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:03 /output/kmeans_early-81
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:03 /output/kmeans_early-82
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:03 /output/kmeans_early-83
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:03 /output/kmeans_early-84
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:03 /output/kmeans_early-85
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:03 /output/kmeans_early-86
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:03 /output/kmeans_early-87
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:03 /output/kmeans_early-88
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:03 /output/kmeans_early-89
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:02 /output/kmeans_early-9
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:03 /output/kmeans_early-90
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:03 /output/kmeans_early-91
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:03 /output/kmeans_early-92
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:03 /output/kmeans_early-93
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:03 /output/kmeans_early-94
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:03 /output/kmeans_early-95
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:03 /output/kmeans_early-96
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:03 /output/kmeans_early-97
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:03 /output/kmeans_early-98
+drwxr-xr-x   - root supergroup          0 2026-02-24 20:03 /output/kmeans_early-99
+```
 
 # Nathaniel Ince
 
