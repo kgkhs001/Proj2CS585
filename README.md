@@ -134,6 +134,7 @@ Note that I only made it dump to the stdout and not save to a file
 (1782,qUfNWKYZkjTEnzzvuDK,IT)
 ...
 ```
+
 ### Task D Output
 
 ### Task E Output
@@ -164,7 +165,7 @@ The original
 3743,360014,6,0
 ```
 
-Single Iteration
+a - Single Iteration
 ```
 How to run:
 hdfs dfs -rm -r -f /output/kmeans_single
@@ -180,7 +181,7 @@ Calculated Centroids after one iteration
 5092.917365269461,159019.0131736527,4.3964071856287426,2.0281437125748503
 ```
 
-Multi Iteration (Passed in 5) -> notice I look at the fourth file because 0 is part of the indeces
+b - Multi Iteration (Passed in 5) -> notice I look at the fourth file because 0 is part of the indeces
 
 ```
 root@810b433b1ffe:/home/ds503/shared_folder/Proj2/Task 2/2.2/target# hdfs dfs -cat /output/kmeans_multi-4/part-r-00000
@@ -192,7 +193,7 @@ root@810b433b1ffe:/home/ds503/shared_folder/Proj2/Task 2/2.2/target# hdfs dfs -c
 5148.055853920516,264282.7948442535,4.3941997851772285,1.9656283566058002
 ```
 
-Converging Iteration (Passed in 100) -> The program only ran 42 times since that is where conversion happened. 
+c - Converging Iteration (Passed in 100) -> The program only ran 42 times since that is where conversion happened. 
 
 ```
 root@810b433b1ffe:/home/ds503/shared_folder/Proj2/Task 2/2.2/target# hadoop jar task2-2-1.0-SNAPSHOT.jar ds503.task2.c_early_term.KMeansEarlyTermination ./Proj2/tuples.csv /output/kmeans_early ./Proj2/tuples_2.csv 100
@@ -244,11 +245,135 @@ drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-
 drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-9
 ```
 
-Optimized KMeans
+d - Optimized KMeans
 
 ```
+...
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:18 /output/kmeans_optimized-10/_SUCCESS
+-rw-r--r--   1 root supergroup        373 2026-02-24 07:18 /output/kmeans_optimized-10/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:18 /output/kmeans_optimized-11/_SUCCESS
+-rw-r--r--   1 root supergroup        374 2026-02-24 07:18 /output/kmeans_optimized-11/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:18 /output/kmeans_optimized-12/_SUCCESS
+-rw-r--r--   1 root supergroup        367 2026-02-24 07:18 /output/kmeans_optimized-12/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:18 /output/kmeans_optimized-13/_SUCCESS
+-rw-r--r--   1 root supergroup        370 2026-02-24 07:18 /output/kmeans_optimized-13/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:18 /output/kmeans_optimized-14/_SUCCESS
+-rw-r--r--   1 root supergroup        372 2026-02-24 07:18 /output/kmeans_optimized-14/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:18 /output/kmeans_optimized-15/_SUCCESS
+-rw-r--r--   1 root supergroup        370 2026-02-24 07:18 /output/kmeans_optimized-15/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:18 /output/kmeans_optimized-16/_SUCCESS
+-rw-r--r--   1 root supergroup        368 2026-02-24 07:18 /output/kmeans_optimized-16/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:18 /output/kmeans_optimized-17/_SUCCESS
+-rw-r--r--   1 root supergroup        368 2026-02-24 07:18 /output/kmeans_optimized-17/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:18 /output/kmeans_optimized-18/_SUCCESS
+-rw-r--r--   1 root supergroup        371 2026-02-24 07:18 /output/kmeans_optimized-18/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:18 /output/kmeans_optimized-19/_SUCCESS
+-rw-r--r--   1 root supergroup        357 2026-02-24 07:18 /output/kmeans_optimized-19/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:18 /output/kmeans_optimized-2/_SUCCESS
+-rw-r--r--   1 root supergroup        369 2026-02-24 07:18 /output/kmeans_optimized-2/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:18 /output/kmeans_optimized-3/_SUCCESS
+-rw-r--r--   1 root supergroup        373 2026-02-24 07:18 /output/kmeans_optimized-3/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:18 /output/kmeans_optimized-4/_SUCCESS
+-rw-r--r--   1 root supergroup        368 2026-02-24 07:18 /output/kmeans_optimized-4/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:18 /output/kmeans_optimized-5/_SUCCESS
+-rw-r--r--   1 root supergroup        368 2026-02-24 07:18 /output/kmeans_optimized-5/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:18 /output/kmeans_optimized-6/_SUCCESS
+-rw-r--r--   1 root supergroup        370 2026-02-24 07:18 /output/kmeans_optimized-6/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:18 /output/kmeans_optimized-7/_SUCCESS
+-rw-r--r--   1 root supergroup        370 2026-02-24 07:18 /output/kmeans_optimized-7/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:18 /output/kmeans_optimized-8/_SUCCESS
+-rw-r--r--   1 root supergroup        362 2026-02-24 07:18 /output/kmeans_optimized-8/part-r-00000
+Found 2 items
+-rw-r--r--   1 root supergroup          0 2026-02-24 07:18 /output/kmeans_optimized-9/_SUCCESS
+-rw-r--r--   1 root supergroup        372 2026-02-24 07:18 /output/kmeans_optimized-9/part-r-00000
+root@810b433b1ffe:/home/ds503/shared_folder/Proj2/Task 2/2.2/target# 
+root@810b433b1ffe:/home/ds503/shared_folder/Proj2/Task 2/2.2/target# hadoop fs -cat /output/kmeans_optimized-4/part-r-00000
 
+root@810b433b1ffe:/home/ds503/shared_folder/Proj2/Task 2/2.2/target# hadoop fs -cat /output/kmeans_optimized-19/part-r-00000
+4961.882919005613,688611.6142742583,4.504410585404972,1.9775461106655974	
+4953.76875957121,895337.5321592649,4.519908116385912,2.0	
+5022.464850615114,494532.51054481545,4.449033391915641,2.0298769771528997	
+5057.320590790617,117052.82102519549,4.422241529105126,2.0747176368375326	
+5111.729706390328,303979.67702936096,4.447322970639033,1.9887737478411054	
+root@810b433b1ffe:/home/ds503/shared_folder/Proj2/Task 2/2.2/target# 
 ```
+
+e - Output Variation
+Variation 1:
+This first one was done with 20 iterations so it did not converge.
+```
+root@810b433b1ffe:/home/ds503/shared_folder/Proj2/Task 2/2.2/target# hadoop fs -cat /output/kmeans_output_variations-variation1/results.txt
+Convergence Reached: NO
+Final Cluster Centers:
+4961.882919005613,688611.6142742583,4.504410585404972,1.9775461106655974	
+4953.76875957121,895337.5321592649,4.519908116385912,2.0	
+5022.464850615114,494532.51054481545,4.449033391915641,2.0298769771528997	
+5057.320590790617,117052.82102519549,4.422241529105126,2.0747176368375326	
+5111.729706390328,303979.67702936096,4.447322970639033,1.9887737478411054
+```
+
+
+This was done with 100 iterations so this is the output. It did converge
+```
+root@810b433b1ffe:/home/ds503/shared_folder/Proj2/Task 2/2.2/target# hadoop fs -cat /output/kmeans_output_variations-variation1/results.txt
+Convergence Reached: YES
+Final Cluster Centers:
+4941.160066006601,705848.0610561057,4.46039603960396,1.9686468646864685	
+4980.214638157895,902646.1957236842,4.527138157894737,1.997532894736842	
+5003.9084628670125,513879.55958549224,4.528497409326425,2.038860103626943	
+5040.448844884489,121905.39191419142,4.4051155115511555,2.0618811881188117	
+5128.816139767055,317467.7795341098,4.433444259567388,2.0	
+root@810b433b1ffe:/home/ds503/shared_folder/Proj2/Task 2/2.2/target# 
+```
+
+Variation 2:
+```
+root@810b433b1ffe:/home/ds503/shared_folder/Proj2/Task 2/2.2/target# hadoop fs -cat /output/kmeans_output_variations-variation2/part-m-* | head -n 20
+5683,387672,6,1	5128.816139767055,317467.7795341098,4.433444259567388,2.0
+4191,333612,0,0	5128.816139767055,317467.7795341098,4.433444259567388,2.0
+7775,669709,5,3	4941.160066006601,705848.0610561057,4.46039603960396,1.9686468646864685
+5959,753401,7,3	4941.160066006601,705848.0610561057,4.46039603960396,1.9686468646864685
+8987,713811,3,1	4941.160066006601,705848.0610561057,4.46039603960396,1.9686468646864685
+4739,564374,9,1	5003.9084628670125,513879.55958549224,4.528497409326425,2.038860103626943
+7375,920122,0,2	4980.214638157895,902646.1957236842,4.527138157894737,1.997532894736842
+463,995659,2,1	4980.214638157895,902646.1957236842,4.527138157894737,1.997532894736842
+9612,777197,2,0	4941.160066006601,705848.0610561057,4.46039603960396,1.9686468646864685
+456,35729,2,1	5040.448844884489,121905.39191419142,4.4051155115511555,2.0618811881188117
+7023,262812,7,2	5128.816139767055,317467.7795341098,4.433444259567388,2.0
+9845,177030,2,1	5040.448844884489,121905.39191419142,4.4051155115511555,2.0618811881188117
+3584,154108,7,3	5040.448844884489,121905.39191419142,4.4051155115511555,2.0618811881188117
+4308,562151,7,3	5003.9084628670125,513879.55958549224,4.528497409326425,2.038860103626943
+3522,995244,5,2	4980.214638157895,902646.1957236842,4.527138157894737,1.997532894736842
+4513,364043,8,0	5128.816139767055,317467.7795341098,4.433444259567388,2.0
+0,478412,8,0	5003.9084628670125,513879.55958549224,4.528497409326425,2.038860103626943
+8835,253116,8,1	5128.816139767055,317467.7795341098,4.433444259567388,2.0
+7490,515711,5,0	5003.9084628670125,513879.55958549224,4.528497409326425,2.038860103626943
+7658,965182,0,1	4980.214638157895,902646.1957236842,4.527138157894737,1.997532894736842
+cat: Unable to write to output stream.
+root@810b433b1ffe:/home/ds503/shared_folder/Proj2/Task 2/2.2/target# 
+```
+
+
+f - Explanation and Experiments
+
+
 # Nathaniel Ince
 
 # Ryker Germain
