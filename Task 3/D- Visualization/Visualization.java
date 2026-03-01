@@ -14,7 +14,7 @@ public class CentroidViz extends Application {
 
     // Setup
     private static final double MIN_VAL = 0.0;
-    private static final double MAX_VAL = 100.0;
+    private static final double MAX_VAL = 100000.0;
     private static final String FILE_PATH = "part-r-00000"; // Hadoop output
 
     @Override
