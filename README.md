@@ -5,7 +5,7 @@
 For AI Usage I had AI make the template code for the map reduce. This code is readily available on the internet. It also helped me think out ideas about how to implement the combiner but the rest of the logic was my own. 
 
 ### Task A Output
-Note that I only made it dump to the stdout and not save to a file
+Note that I only made it dump to the stdout and not save to a file. But the save to file functionality is commented.
 
 ```
 2026-02-17 17:50:00,219 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MapReduceLauncher - Success!
@@ -42,6 +42,7 @@ Note that I only made it dump to the stdout and not save to a file
 (Playing Guitar,7033)
 2026-02-17 17:50:00,439 [main] INFO  org.apache.pig.Main - Pig script completed in 11 seconds and 896 milliseconds (11896 ms)
 ```
+
 
 
 ### Task B Output
@@ -248,11 +249,234 @@ Section of output, run against my own data. See the task itself for commentary -
 200000	61	110
 
 ```
-### Task F Output
+### Task F Output (Ryker)
 
-### Task G Output
+```
+root@810b433b1ffe:/home/ds503/shared_folder/Proj2/Task 1# hdfs dfs -cat ./task_f_output/part-r-00000
+5	XMGTalVNdekPuj
+6	EUcCXUDQlks
+9	WcnuOcgLMMsFwPDV
+10	kSDwWeTPlxQQuC
+12	zWtyeYOVslGK
+13	rVnRagadBoKM
+16	aQCdtefdAkyuTssM
+17	AKwsIbHuyiVCnAoSX
+18	OUdWwhwAkivvXqj
+19	RGxmbPExcIFxUiVmjqpL
+22	EhLQVdglGJ
+24	wuliIdCGOWVUKvJCp
+25	ruraJmwrsSQTr
+27	ZGkSLOWWOjvyY
+29	YqmPGFcmENYTNq
+33	upoDLWQbBzOkAOtGKv
+34	JFQZPOFcJm
+37	MTXkKyCRBUWaUcprBy
+38	lRhbnYIYvvGfg
+40	ItVgYfWTEKQiGbMvpXj
+41	xmYMZfTjBka
+43	ZkVTHtUOVOrmJBFY
+47	qPHGgosDTLXoPKkPHoV
+52	AUBXncAhPKuDlSwKumnn
+53	iraLafXLwtoAa
+54	wCSzzyIeGzmVfwBxOZe
+65	NtRLxmNKWlytmWITO
+66	hzTXUzSniFDWF
+68	MWNJhnPDphWbFNJjzW
+71	FhLmMZauNqgQeA
+77	xdrRrJBmQQ
+79	LNQWQuOXhTnN
+80	DJhRJXjaqW
+86	jVdvZVjqOfipR
+88	clQrnnceRqxwr
+89	tIlicYzxfZ
+90	GGAjUmIBeeIsVGZoJ
+92	FbxupthnoAlYXgNRaXF
+94	FwcGgqsCVK
+97	QWfpvqxmZnCqmfuHIPD
+102	qrAAWxPpsdIdG
+103	UUYWYGsrJUqm
+105	jUQsnVSOsECtzMQtxUI
+107	jNNqCZXEANDqZZpuxSY
+108	AxoNGdXVmIL
+109	lzOYWcXhNyQyaQxm
+110	NTJKLAvYvPLscGRSAs
+111	bBwPBojtDbNZBFZJVwL
+113	KDZvRQvnyGiTNiWatBu
+114	DQQXXqoXrPVie
+115	TXBTYCHXecWo
+117	XNTTZTTCpAAeimn
+118	DgpeYpYSPcEZe
+121	qjOKJhlQNWEebVpcN
+122	VHoMHvDYLbeafLyl
+124	MsZwtHqfzagmmrv
+127	kjdqzjWzSQcxIYbPGMOp
+130	rPyNEjQpQosauehC
+132	UEBSvfBEXJhSFdIf
+133	DJgvyETVYN
+134	VYrTqYWWKCsopjSaWJso
+...
+```
 
-### Task H Output
+### Task G Output (Ryker)
+
+```
+1	gdNcivbmUmWqw
+2	zpxYpfsSyYCDfK
+3	gyLDezrITBdBpoE
+4	OhjELhYLHyveq
+5	XMGTalVNdekPuj
+6	EUcCXUDQlks
+7	yRRppJaJOB
+8	BFqEbXKaaRDjZNVSR
+9	WcnuOcgLMMsFwPDV
+10	kSDwWeTPlxQQuC
+11	nYsSAktpIUKXNEePsVEt
+12	zWtyeYOVslGK
+13	rVnRagadBoKM
+14	ThnVVDdZbfipx
+15	MHjxsXjloAgeJ
+16	aQCdtefdAkyuTssM
+17	AKwsIbHuyiVCnAoSX
+18	OUdWwhwAkivvXqj
+19	RGxmbPExcIFxUiVmjqpL
+20	sXXRaePyOdWU
+21	WdrrGVpOwHE
+22	EhLQVdglGJ
+23	rlNlftrmLcb
+24	wuliIdCGOWVUKvJCp
+25	ruraJmwrsSQTr
+26	peehRkSaBoCDmOynYD
+27	ZGkSLOWWOjvyY
+28	WWfkusxowUHSQME
+29	YqmPGFcmENYTNq
+30	cYMYAtXrtmY
+31	dVommmseHvNk
+32	gnWcRvGtmQUOSvaX
+33	upoDLWQbBzOkAOtGKv
+34	JFQZPOFcJm
+35	nWwGMekJdNXVCJAUL
+36	IkDlBesYeTaXdeDZIG
+37	MTXkKyCRBUWaUcprBy
+38	lRhbnYIYvvGfg
+39	GRVjKjizssxHZZjJ
+40	ItVgYfWTEKQiGbMvpXj
+41	xmYMZfTjBka
+42	cZIxnHnFwUJePPKwPhI
+43	ZkVTHtUOVOrmJBFY
+44	hnjpLOHhoXYDofCHWina
+45	LMhqSsqEhbkvDTDu
+46	XFoaKWPixj
+47	qPHGgosDTLXoPKkPHoV
+48	xQUCdpsOri
+49	VhqVMKBujTGJkuGb
+50	aPufcGjAydvBzvtdk
+51	TLZHEeJvGfaz
+52	AUBXncAhPKuDlSwKumnn
+53	iraLafXLwtoAa
+54	wCSzzyIeGzmVfwBxOZe
+55	ZsggpsfyWGOyNo
+56	PrxsQoJsSYde
+57	znQefysLwcpcx
+58	JLgGjnOEhXljPcXuPMri
+59	UtdzXdpiblT
+60	OhTstwHHBZaoAWWykHn
+61	yWIaZCDxmHEb
+62	MeNDpmiFFtJb
+63	GsvKUAlbvDiDknd
+64	jDEfaEvpaltacBZqt
+65	NtRLxmNKWlytmWITO
+66	hzTXUzSniFDWF
+67	rYuwSUvywfuqk
+68	MWNJhnPDphWbFNJjzW
+69	OORfyEZCSwXqs
+70	OfXzQxDpKiLl
+71	FhLmMZauNqgQeA
+72	ssNOlhGdHPQBy
+73	IhZItigQsy
+74	QLlQOnEXZTUfUrHc
+75	pTqonrMuohCHMu
+76	NObSWfsqKnMKzIavbF
+77	xdrRrJBmQQ
+78	PhyTodxEnjNAipxwaH
+79	LNQWQuOXhTnN
+80	DJhRJXjaqW
+81	eDDZgLSqGgsjQnyhQlkh
+82	SHhSpFOJmkMBKHxgU
+83	ojgAKdCSKlBqLE
+84	mKuNYYxXwFYoWXJMvF
+85	jpoWRCecpI
+86	jVdvZVjqOfipR
+87	yreKialHednBQXD
+88	clQrnnceRqxwr
+89	tIlicYzxfZ
+90	GGAjUmIBeeIsVGZoJ
+91	pXZokoaroInn
+92	FbxupthnoAlYXgNRaXF
+93	hSdAtTpqplgemfnfUxC
+94	FwcGgqsCVK
+95	WPqfYqDglqKRtPpme
+96	iTndLHFTgJUZch
+97	QWfpvqxmZnCqmfuHIPD
+98	WSnUWzbEHzaWMgcOn
+99	fTkZNuQqipNkcAIjNyO
+100	ROybokFsQCLhf
+101	uvzJfboKJnCLoDRILp
+102	qrAAWxPpsdIdG
+103	UUYWYGsrJUqm
+104	CMCdUSSKQKeuBCRRn
+105	jUQsnVSOsECtzMQtxUI
+106	wfSCpcUejsGP
+107	jNNqCZXEANDqZZpuxSY
+108	AxoNGdXVmIL
+109	lzOYWcXhNyQyaQxm
+110	NTJKLAvYvPLscGRSAs
+111	bBwPBojtDbNZBFZJVwL
+112	RciFqOxCmMcO
+113	KDZvRQvnyGiTNiWatBu
+114	DQQXXqoXrPVie
+115	TXBTYCHXecWo
+116	zgFwWSLykJtRnM
+117	XNTTZTTCpAAeimn
+118	DgpeYpYSPcEZe
+119	xwDtLkQPiUtS
+120	itGCydThJHNda
+121	qjOKJhlQNWEebVpcN
+122	VHoMHvDYLbeafLyl
+123	qjWQLLdtTSOGVR
+124	MsZwtHqfzagmmrv
+125	JGEJGeWEFzUgbxpIW
+126	yMRDpMkXiu
+127	kjdqzjWzSQcxIYbPGMOp
+128	kgnhrwVftNMnQrKcuY
+129	ilLsFiXkpBilHa
+130	rPyNEjQpQosauehC
+131	zqsntzGuxaZTcQw
+132	UEBSvfBEXJhSFdIf
+133	DJgvyETVYN
+134	VYrTqYWWKCsopjSaWJso
+135	wCKmsLXjFQsTNEwUOC
+136	ccafTuckrmTizankuQT
+137	jkKdlxUeRYIs
+138	hknDKLhgQCsmn
+139	zBrWjpFWORH
+140	DVhJpNakPtAL
+141	yBbUozJwFZShFWdvOrK
+142	ooZdDZPPXyIS
+143	pTVpiegWvjeNqZKUg
+144	TTxMdRxCuebdSn
+145	uupvLjtZPRDkzNn
+146	IKkGBXjrZyxCNmR
+147	LCIasWBTTLlRD
+148	SCZKuxpKlyIPACyAU
+149	iSbNKejjjPPKTLQY
+150	IANaANGsFkVkVASl
+151	MuoSlPUIgZLLAhgUcUh
+152	wQMogXVLcM
+153	aHvTpCTPGWpcQ
+154	sCoACmqSEfIWbSPgRKiN
+...
+```
+### Task H Output (Ryker)
 
 
 ## Task 2 - Data Gen

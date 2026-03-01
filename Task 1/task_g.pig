@@ -6,14 +6,15 @@
 Pages = LOAD './Proj1/circleNetPage.csv' using PigStorage(',') AS (id:int, nickname:chararray, jobtitle:chararray, regioncode:int, hobby:chararray);
 Activity = LOAD './Proj1/activityLog.csv' using PigStorage(',') AS (actionId:int, byWho:int, whatPage:int, actionType:chararray, actionTime:int);
 
--- Find the most recent activity for every person
-GroupedActivity = GROUP Activity BY byWho;
-LatestActivity = FOREACH GroupedActivity GENERATE group AS ownerId, MAX(Activity.time) AS lastTime;
+-- Identify Active Owners in the last 90 days
+RecentActivity = FILTER Activity BY actionTime >= (1000000 - 2160);
+RecentOwners = FOREACH RecentActivity GENERATE byWho;
+DistinctRecentOwners = DISTINCT RecentOwners;
 
--- Identify "Outdated"
-OutdatedIDs = FILTER LatestActivity BY lastTime < (1000000 - 2160);
+-- Co-group all Pages with Recent Owners
+Cogrouped = COGROUP Pages BY id, DistinctRecentOwners BY byWho;
 
--- Join to get Nicknames
-OutdatedNames = JOIN OutdatedIDs BY ownerId, Pages BY ownerId;
-Final = FOREACH OutdatedNames GENERATE Pages::ownerId, Pages::nickname;
+-- Extract Pages that have NO recent activity (DistinctRecentOwners is empty)
+OutdatedGroup = FILTER Cogrouped BY IsEmpty(DistinctRecentOwners);
+Final = FOREACH OutdatedGroup GENERATE FLATTEN(Pages.id) AS id, FLATTEN(Pages.nickname) AS nickname;
 STORE Final INTO 'task_g_output';
