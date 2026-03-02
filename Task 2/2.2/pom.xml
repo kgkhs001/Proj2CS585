@@ -21,19 +21,16 @@
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
-    <!-- Hadoop MapReduce Client Core -->
     <dependency>
         <groupId>org.apache.hadoop</groupId>
         <artifactId>hadoop-mapreduce-client-core</artifactId>
         <version>${hadoop.version}</version>
     </dependency>
-    <!-- Hadoop Common -->
     <dependency>
         <groupId>org.apache.hadoop</groupId>
         <artifactId>hadoop-common</artifactId>
         <version>${hadoop.version}</version>
     </dependency>
-    <!-- Hadoop MapReduce Client JobClient -->
     <dependency>
         <groupId>org.apache.hadoop</groupId>
         <artifactId>hadoop-mapreduce-client-jobclient</artifactId>
