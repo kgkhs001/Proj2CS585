@@ -4,7 +4,7 @@
 #### AI Usage
 For AI Usage I had AI make the template code for the map reduce. This code is readily available on the internet. It also helped me think out ideas about how to implement the combiner but the rest of the logic was my own. 
 
-### Task A Output
+### Task A Output (Krishna)
 Note that I only made it dump to the stdout and not save to a file. But the save to file functionality is commented.
 
 ```
@@ -43,9 +43,7 @@ Note that I only made it dump to the stdout and not save to a file. But the save
 2026-02-17 17:50:00,439 [main] INFO  org.apache.pig.Main - Pig script completed in 11 seconds and 896 milliseconds (11896 ms)
 ```
 
-
-
-### Task B Output
+### Task B Output (Krishna)
 
 ```
 2026-02-18 17:10:10,589 [main] WARN  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MapReduceLauncher - Encountered Warning FIELD_DISCARDED_TYPE_CONVERSION_FAILED 200000 time(s).
@@ -66,7 +64,8 @@ Note that I only made it dump to the stdout and not save to a file. But the save
 2026-02-18 17:10:10,709 [main] INFO  org.apache.pig.Main - Pig script completed in 40 seconds and 988 milliseconds (40988 ms)
 ```
 
-### Task C Output
+### Task C Output (Krishna)
+
 ```
 2026-02-18 17:23:42,672 [main] INFO  org.apache.pig.backend.hadoop.executionengine.util.MapRedUtil - Total input paths to process : 1
 (7,yRRppJaJOB,Marketing Manager,36,Reading)
@@ -136,8 +135,9 @@ Note that I only made it dump to the stdout and not save to a file. But the save
 ...
 ```
 
-### Task D Output
-Section of output, run against my own data. See comments in the task itself for commentary on how it works. - Nathaniel Ince
+### Task D Output (Nathaniel)
+Section of output, run against my own data. See comments in the task itself for commentary on how it works
+
 ```
 Laura738804_0	107
 Ashley90316581670	76
@@ -193,8 +193,9 @@ Jake25_7046114447	104
 Sarah80204780989	87
 ```
 
-### Task E Output
-Section of output, run against my own data. See the comments in task itself for commentary - Nathaniel Ince
+### Task E Output (Nathaniel)
+Section of output, run against my own data. See the comments in task itself for commentary
+
 ```
 199900	57	99
 199902	53	95
@@ -477,7 +478,9 @@ root@810b433b1ffe:/home/ds503/shared_folder/Proj2/Task 1# hdfs dfs -cat ./task_f
 ...
 ```
 ### Task H Output (Ryker)
-
+```
+example output
+```
 
 ## Task 2 - Data Gen
 ### 2.1
@@ -487,7 +490,6 @@ The generated data has been uploaded into the hdfs environment using
 ```
 hdfs dfs -put input_file_location output_file_location
 ```
-
 ### 2.2
 The original
 ```
@@ -497,14 +499,12 @@ The original
 8685,254990,9,3
 3743,360014,6,0
 ```
-
 a - Single Iteration
 ```
 How to run:
 hdfs dfs -rm -r -f /output/kmeans_single
 hadoop jar /tmp/task2-2.jar ds503.task2.a_single.SingleIterationKMeans /input/tuples.csv /output/kmeans_single /input/tuples_2.csv
 ```
-
 Calculated Centroids after one iteration
 ```
 5020.043805612594,500456.58042436687,4.507871321013004,2.030800821355236	
@@ -513,9 +513,7 @@ Calculated Centroids after one iteration
 4960.019541206457,810332.9745114698,4.498300764655905,1.9847068819031435	
 5092.917365269461,159019.0131736527,4.3964071856287426,2.0281437125748503
 ```
-
-b - Multi Iteration (Passed in 5) -> notice I look at the fourth file because 0 is part of the indeces
-
+b - Multi Iteration (Passed in 5) → notice I look at the fourth file because 0 is part of the indices
 ```
 root@810b433b1ffe:/home/ds503/shared_folder/Proj2/Task 2/2.2/target# hdfs dfs -cat /output/kmeans_multi-4/part-r-00000
 
@@ -525,9 +523,7 @@ root@810b433b1ffe:/home/ds503/shared_folder/Proj2/Task 2/2.2/target# hdfs dfs -c
 5071.770363101079,106459.70853778213,4.43179587831207,2.0853778213935232	
 5148.055853920516,264282.7948442535,4.3941997851772285,1.9656283566058002
 ```
-
-c - Converging Iteration (Passed in 100) -> The program only ran 42 times since that is where conversion happened. 
-
+c - Converging Iteration (Passed in 100) → The program only ran 42 times since that is where conversion happened. 
 ```
 root@810b433b1ffe:/home/ds503/shared_folder/Proj2/Task 2/2.2/target# hadoop jar task2-2-1.0-SNAPSHOT.jar ds503.task2.c_early_term.KMeansEarlyTermination ./Proj2/tuples.csv /output/kmeans_early ./Proj2/tuples_2.csv 100
 ...
@@ -577,9 +573,7 @@ drwxr-xr-x   - root supergroup          0 2026-02-23 23:52 /output/kmeans_early-
 drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-8
 drwxr-xr-x   - root supergroup          0 2026-02-23 23:53 /output/kmeans_early-9
 ```
-
 d - Optimized KMeans
-
 ```
 ...
 Found 2 items
@@ -647,8 +641,8 @@ root@810b433b1ffe:/home/ds503/shared_folder/Proj2/Task 2/2.2/target# hadoop fs -
 5111.729706390328,303979.67702936096,4.447322970639033,1.9887737478411054	
 root@810b433b1ffe:/home/ds503/shared_folder/Proj2/Task 2/2.2/target# 
 ```
-
-e - Output Variation
+e - Output Variations 
+####
 Variation 1:
 This first one was done with 20 iterations so it did not converge.
 ```
@@ -661,8 +655,6 @@ Final Cluster Centers:
 5057.320590790617,117052.82102519549,4.422241529105126,2.0747176368375326	
 5111.729706390328,303979.67702936096,4.447322970639033,1.9887737478411054
 ```
-
-
 This was done with 100 iterations so this is the output. It did converge
 ```
 root@810b433b1ffe:/home/ds503/shared_folder/Proj2/Task 2/2.2/target# hadoop fs -cat /output/kmeans_output_variations-variation1/results.txt
@@ -675,7 +667,6 @@ Final Cluster Centers:
 5128.816139767055,317467.7795341098,4.433444259567388,2.0	
 root@810b433b1ffe:/home/ds503/shared_folder/Proj2/Task 2/2.2/target# 
 ```
-
 Variation 2:
 ```
 root@810b433b1ffe:/home/ds503/shared_folder/Proj2/Task 2/2.2/target# hadoop fs -cat /output/kmeans_output_variations-variation2/part-m-* | head -n 20
@@ -703,16 +694,15 @@ cat: Unable to write to output stream.
 root@810b433b1ffe:/home/ds503/shared_folder/Proj2/Task 2/2.2/target# 
 ```
 
-
 f - Explanation and Experiments
 ### 1. Explanations
 a - This is the base k means algorithms using the map reduce methods it only runs the algorithm once. What it does is iterate through each point and compare the distance of that data point to the centroids. It then assigns the key value pair as <Centroid, data point>. This key value pair is, at this point, sent to shuffle and sort where it is then sent to the reducer. The reducer receives input formatted as such, <Centroid, List[Data points]>. The reducer then averages out the w,x,y,z values for all the points in the list and then assigns that newly calculated average point as the centroid. 
 
 b - This does exactly what a does but instead of running just once, it runs as many times as the user specifies in the terminal input. So if you input 5 into the terminal then the Map Reduce KMeans will run 5 times. It is the exact same algorithm the only major code changes are to the run function. Since we are now writing to different files each time the program loops, you have to get the new centroids from the newly outputted file. These new centroids are now passed in as input on the next iteration. The final output can be seen at file /output/...-(input -1)/part-r-0000.
 
-c - This is a build off of part b but instead of going through every iteration no matter what, it stops and doesn't proceed with the next iteration if the newly formualted centorids are within 0.1 of the previous centroids. This is then outputted to the final file as in the previous algorithm.
+c - This is a build on part b but instead of going through every iteration no matter what, it stops and doesn't proceed with the next iteration if the newly formulated centroids are within 0.1 of the previous centroids. This is then outputted to the final file as in the previous algorithm.
 
-d - This is the same as the previous algorithms but it includes a combiner which functions as a pre processor to the reducer. Instead of passing in a list of points with the centroid as the key what we pass in after the combiner is <Centroid, {sum of the w,x,y,z points with the count appended}>
+d - This is the same as the previous algorithms, but it includes a combiner which functions as a preprocessor to the reducer. Instead of passing in a list of points with the centroid as the key what we pass in after the combiner is <Centroid, {sum of the w,x,y,z points with the count appended}>
 
 e - This formats the file output to just the final centroid and tells if the final output was reached due to convergence or not. Then for the second variation, it runs a map only job that assigns each data point to their respective cluster. 
 
@@ -720,20 +710,19 @@ e - This formats the file output to just the final centroid and tells if the fin
 ### 2. Conducting Experiments & Performance Analysis
 
 **Varying R (Max Iterations):**
-*   *Experiment:* Run Algorithm (b) Fixed-Iteration with R=100. Run Algorithm (c) Early-Termination with R=100.
+*   *Experiment:* Run Algorithm (b) Fixed-Iteration with R=100. Run Algorithm (Part C) Early-Termination with R=100.
 *   *Finding:* As seen in the Task (c) output in the README, Early Termination detected convergence after 42 iterations and successfully halted, whereas (b) would have blindly kept running.
 *   *Analysis:* Early-termination avoids 50-100 completely redundant MapReduce jobs, proving that implementing state-checking natively improves runtime efficiency by eliminating unnecessary static assignments.
 
 **Relative Performance (Combiner vs No Combiner):**
-*   *Experiment/Analysis:* By using the Combiner in Algorithm (d), the execution of MapReduce jobs is significantly faster. Because the Combiner pre-aggregates points into a single sum vector plus a count per Mapper, the amount of data written to disk, shuffled across the network, and processed by the Reducer is exponentially smaller compared to (c) which sends every single row of data independently. This decreases both memory load and network bottlenecking.
+*   *Experiment/Analysis:* By using the Combiner in Algorithm (d), the execution of MapReduce jobs is significantly faster. Because the Combiner pre-aggregates points into a single sum vector plus a count per Mapper, the amount of data written to disk, shuffled across the network, and processed by the Reducer is exponentially smaller compared to (c) which sends every single row of data independently. This decreases both memory load and network bottle-necking.
 
 **Varying K (Number of Clusters):**
 *   *Analysis:* By running the model with a tiny K (e.g. K=2), we expect the algorithm to converge slightly faster, but the clustering boundaries will be very broad and generalize the data heavily. With a larger K (e.g. K=10), computation time per Map task increases slightly (because distance must be checked against 10 centroids instead of 2 or 5). Furthermore with more centroids, the system is prone to taking more overall iterations to formally converge as cluster boundaries are tighter and points shift assignments more frequently.
 
 
-```
 This is what happened when there were 5 clusters. TLDR: when the early termination algorithm was run with a value for 100, it only ran 43 times.
-
+```
 hadoop jar task2-2-1.0-SNAPSHOT.jar ds503.task2.c_early_term.KMeansEarlyTermination ./Proj2/tuples.csv /output/kmeans_early ./Proj2/tuples_2.csv 100
 
 root@810b433b1ffe:/home/ds503/shared_folder/Proj2/Task 2/2.2/target# hdfs dfs -ls /output/kmeans*       
@@ -1113,13 +1102,14 @@ drwxr-xr-x   - root supergroup          0 2026-02-24 20:03 /output/kmeans_early-
 
 # Nathaniel Ince
 
-I contributed Silhouette
+I contributed the Silhouette
+
 See the folder for my explanation of how it works. (silhouette_doc.md in E-silhouette)
 
 I experimented on my own data with my own k-means program, so the centroids will not look quite alike. And since we are using a new dataset, rather than 
 enriching the previous results we will take off our own exploration and see if we can get structured clusters.
 
-Here's what happens if you make 1000 centroids and run silhouette before running k-means a.
+Here's what happens if you make 1000 centroids and run silhouette before running k-means part A.
 ```
 100008.0,492107.0,791956.0,67077.0	0.00381878353889874
 101486.0,315551.0,710093.0,243239.0	NaN
@@ -1145,8 +1135,8 @@ Here's what happens if you make 1000 centroids and run silhouette before running
 126366.0,933141.0,302864.0,48185.0	Infinity
 128845.0,316577.0,744586.0,107635.0	0.2528048272122852
 ```
-This was a confusing result as I have check the calculations of my program many times, but:
-1.) Negative numbers are legitimate results fomr the calculation
+This was a confusing result as I have checked the calculations of my program many times, but:
+1.) Negative numbers are legitimate results for the calculation
 2.) Infinity largely comes from the average being over (n-1), and we have many single point clusters here
 3.) NaN's are probably from zero point clusters.
 
@@ -1230,7 +1220,7 @@ Now let's try 2000 centroids, 10 iterations for part b. Here's part of the outpu
 
 There's more centroids because I took steps in the multi-iteration to make sure we don't lose the number of centroids between steps. Numbers still seem somewhat low.
 
-Lets try 1000 centers, 10 iterations
+Let's try 1000 centers, 10 iterations
 
 ``` 
 46647.0,25009.0,21134.0,944176.0	0.013111235443056438
@@ -1306,6 +1296,11 @@ As part d and e's changes don't affect what kinds of centroids we get, I will no
 
 
 # Ryker Germain
+I created the visualizations for the different centroids in part 2.2,
+in accordance with part D. I used JavaFX to convert the 4D data into parallel
+coordinates laid side-by-side. 
+
+
 
 ## Run the PIG Scripts
 
