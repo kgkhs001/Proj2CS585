@@ -9,28 +9,40 @@ Follows = LOAD './Proj1/follows.csv' USING PigStorage(',') AS (colRel:int, id1:i
 -- Reducer Limit
 SET default_parallel 30;
 
--- Setup "Distributed Cache" (Map-Side Join)
-F_with_R1 = JOIN Follows BY id1, Pages BY id USING 'replicated';
-F_with_R2 = JOIN F_with_R1 BY id2, Pages BY id USING 'replicated';
+-- Clean output directory if it exists
+rmf task_h_output;
 
--- Filter for Same Region
-SameRegion = FILTER F_with_R2 BY Pages::region == Pages::region;
+-- Pre-process data
+P = FOREACH Pages GENERATE id, nickname, regioncode;
+F1 = FOREACH Follows GENERATE id1, id2;
+F2 = FOREACH Follows GENERATE id1, id2;
 
--- Clean up columns: follower, followed, nickname
-ActiveFollows = FOREACH SameRegion GENERATE
-    F_with_R1::Follows::id1 AS userA,
-    F_with_R1::Follows::id2 AS userB,
-    F_with_R1::Pages::nick AS nickA;
+-- Find Unrequited Follows using LEFT OUTER JOIN
+-- F1 contains A->B. F2 contains B->A.
+JoinedFollows = JOIN F1 BY (id1, id2) LEFT OUTER, F2 BY (id2, id1);
+Unrequited = FILTER JoinedFollows BY F2::id1 IS NULL;
+UnreqList = FOREACH Unrequited GENERATE F1::id1 AS follower, F1::id2 AS followed;
 
--- Symmetry Check
-Grouped = COGROUP ActiveFollows BY userA, ActiveFollows BY userB;
+-- Join with Pages to get Follower's RegionCode and Nickname
+Out1 = JOIN UnreqList BY follower, P BY id;
+FollowerData = FOREACH Out1 GENERATE 
+    UnreqList::follower AS follower, 
+    UnreqList::followed AS followed, 
+    P::nickname AS follower_nick, 
+    P::regioncode AS follower_rc;
 
--- Identify "Unrequited"
-Unrequited = FOREACH Grouped {
-    Targets = FILTER ActiveFollows BY NOT(userB IN ActiveFollows.userA);
-    GENERATE group AS userID, Targets.nickA AS nickname, Targets.userB AS followedID;
-}
+-- Join with Pages to get Followed's RegionCode
+Out2 = JOIN FollowerData BY followed, P BY id;
+FollowedData = FOREACH Out2 GENERATE 
+    FollowerData::follower AS follower, 
+    FollowerData::followed AS followed, 
+    FollowerData::follower_nick AS follower_nick, 
+    FollowerData::follower_rc AS follower_rc, 
+    P::regioncode AS followed_rc;
+
+-- Filter by Same Region
+SameRegion = FILTER FollowedData BY follower_rc == followed_rc;
 
 -- Flatten and Store
-Final = FOREACH Unrequited GENERATE userID, nickname, followedID;
+Final = FOREACH SameRegion GENERATE follower AS userID, follower_nick AS nickname, followed AS followedID;
 STORE Final INTO 'task_h_output';
