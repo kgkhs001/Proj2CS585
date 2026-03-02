@@ -6,6 +6,9 @@
 Pages = LOAD './Proj1/circleNetPage.csv' using PigStorage(',') AS (id:int, nickname:chararray, jobtitle:chararray, regioncode:int, hobby:chararray);
 Follows = LOAD './Proj1/follows.csv' USING PigStorage(',') AS (colRel:int, id1:int, id2:int, date:int, desc:chararray);
 
+-- Reducer Limit
+SET default_parallel 30;
+
 -- Setup "Distributed Cache" (Map-Side Join)
 F_with_R1 = JOIN Follows BY id1, Pages BY id USING 'replicated';
 F_with_R2 = JOIN F_with_R1 BY id2, Pages BY id USING 'replicated';
