@@ -478,9 +478,10 @@ root@810b433b1ffe:/home/ds503/shared_folder/Proj2/Task 1# hdfs dfs -cat ./task_f
 ...
 ```
 ### Task H Output (Ryker)
-```
-example output
-```
+
+Even though we were able to get H properly running in Project 1, there was an issue with it this time. We believe the
+issue is with the total memory capability of Docker container. We tried multiple different algorithm structures
+as well as passing limits for the reducers. The best and final attempt can be seen in the file.
 
 ## Task 2 - Data Gen
 ### 2.1
@@ -707,7 +708,7 @@ B Visual Explanation-
 
 C - This is a build on part b but instead of going through every iteration no matter what, it stops and doesn't proceed with the next iteration if the newly formulated centroids are within 0.1 of the previous centroids. This is then outputted to the final file as in the previous algorithm.
 
-C Visual Explanation-
+C Visual Explanation- Same data as B
 
 D - This is the same as the previous algorithms, but it includes a combiner which functions as a preprocessor to the reducer. Instead of passing in a list of points with the centroid as the key what we pass in after the combiner is <Centroid, {sum of the w,x,y,z points with the count appended}>
 
@@ -715,7 +716,7 @@ D Visual Explanation-
 
 E - This formats the file output to just the final centroid and tells if the final output was reached due to convergence or not. Then for the second variation, it runs a map only job that assigns each data point to their respective cluster. 
 
-E Visual Explanation-
+E Visual Explanation- just 1 variation
 
 
 ### 2. Conducting Experiments & Performance Analysis
@@ -1317,6 +1318,9 @@ towards the dimension with the largest values.
 
 Each visual and the accompanying description can be found above in their respective sections in 2.2. 
 
+pass file location in as arg
+
+no C because same as B
 
 ## Run the PIG Scripts
 
