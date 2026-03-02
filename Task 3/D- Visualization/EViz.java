@@ -12,7 +12,7 @@ import java.util.List;
 
 public class EViz extends Application {
 
-    private static final String FILE_PATH = "";
+    private static String FILE_PATH;
 
     // Min and max for each of the 4 dimensions
     private double[] minValues = new double[4];
@@ -114,6 +114,13 @@ public class EViz extends Application {
         return list;
     }
 
-    public static void main(String[] args) { launch(args); }
+    public static void main(String[] args) {
+        if (args.length < 1) {
+            System.err.println("Usage: java EViz <file_path>");
+            System.exit(1);
+        }
+        FILE_PATH = args[0];
+        launch(args);
+    }
 
 }
