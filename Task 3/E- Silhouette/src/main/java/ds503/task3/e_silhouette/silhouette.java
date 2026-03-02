@@ -243,6 +243,7 @@ public class silhouette {
             }
             for (String p1:p1_l){
                 for(String p2:p2_l){
+                    if (p1.toString().equals(p2.toString())) { continue; }
                     tWrite1.set(p1);
                     tWrite2.set(p2);
                     context.write(tWrite1,tWrite2);
@@ -417,10 +418,8 @@ public class silhouette {
                     Center = val.toString().substring(1);
                 }
             }
-            if (a < b) {
-                tWrite.set((1 - a/b) + "\t" + Center);
-            } else if (b < a) {
-                tWrite.set((b/a - 1) + "\t" + Center);
+            if (a!=0.0 || b != 0.0) {
+                tWrite.set((b - a) / Math.max(a, b) + "\t" + Center);
             } else {
                 tWrite.set(0.0 + "\t" + Center);
             }
@@ -453,10 +452,10 @@ public class silhouette {
 
         public void map(Object key, Text value, Context context)
                 throws IOException, InterruptedException {
-                String[] s = value.toString().split("\t");
-                tWrite1.set(s[2]);
-                tWrite2.set(s[1]+"_"+1);
-                context.write(tWrite1, tWrite2);
+            String[] s = value.toString().split("\t");
+            tWrite1.set(s[2]);
+            tWrite2.set(s[1]+"_"+1);
+            context.write(tWrite1, tWrite2);
         }
     }
 
