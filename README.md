@@ -694,17 +694,27 @@ cat: Unable to write to output stream.
 root@810b433b1ffe:/home/ds503/shared_folder/Proj2/Task 2/2.2/target# 
 ```
 
-f - Explanation and Experiments
+F - Explanation and Experiments
 ### 1. Explanations
-a - This is the base k means algorithms using the map reduce methods it only runs the algorithm once. What it does is iterate through each point and compare the distance of that data point to the centroids. It then assigns the key value pair as <Centroid, data point>. This key value pair is, at this point, sent to shuffle and sort where it is then sent to the reducer. The reducer receives input formatted as such, <Centroid, List[Data points]>. The reducer then averages out the w,x,y,z values for all the points in the list and then assigns that newly calculated average point as the centroid. 
+A - This is the base k means algorithms using the map reduce methods it only runs the algorithm once. What it does is iterate through each point and compare the distance of that data point to the centroids. It then assigns the key value pair as <Centroid, data point>. This key value pair is, at this point, sent to shuffle and sort where it is then sent to the reducer. The reducer receives input formatted as such, <Centroid, List[Data points]>. The reducer then averages out the w,x,y,z values for all the points in the list and then assigns that newly calculated average point as the centroid. 
 
-b - This does exactly what a does but instead of running just once, it runs as many times as the user specifies in the terminal input. So if you input 5 into the terminal then the Map Reduce KMeans will run 5 times. It is the exact same algorithm the only major code changes are to the run function. Since we are now writing to different files each time the program loops, you have to get the new centroids from the newly outputted file. These new centroids are now passed in as input on the next iteration. The final output can be seen at file /output/...-(input -1)/part-r-0000.
+A Visual Explanation- 
 
-c - This is a build on part b but instead of going through every iteration no matter what, it stops and doesn't proceed with the next iteration if the newly formulated centroids are within 0.1 of the previous centroids. This is then outputted to the final file as in the previous algorithm.
+B - This does exactly what a does but instead of running just once, it runs as many times as the user specifies in the terminal input. So if you input 5 into the terminal then the Map Reduce KMeans will run 5 times. It is the exact same algorithm the only major code changes are to the run function. Since we are now writing to different files each time the program loops, you have to get the new centroids from the newly outputted file. These new centroids are now passed in as input on the next iteration. The final output can be seen at file /output/...-(input -1)/part-r-0000.
 
-d - This is the same as the previous algorithms, but it includes a combiner which functions as a preprocessor to the reducer. Instead of passing in a list of points with the centroid as the key what we pass in after the combiner is <Centroid, {sum of the w,x,y,z points with the count appended}>
+B Visual Explanation-
 
-e - This formats the file output to just the final centroid and tells if the final output was reached due to convergence or not. Then for the second variation, it runs a map only job that assigns each data point to their respective cluster. 
+C - This is a build on part b but instead of going through every iteration no matter what, it stops and doesn't proceed with the next iteration if the newly formulated centroids are within 0.1 of the previous centroids. This is then outputted to the final file as in the previous algorithm.
+
+C Visual Explanation-
+
+D - This is the same as the previous algorithms, but it includes a combiner which functions as a preprocessor to the reducer. Instead of passing in a list of points with the centroid as the key what we pass in after the combiner is <Centroid, {sum of the w,x,y,z points with the count appended}>
+
+D Visual Explanation-
+
+E - This formats the file output to just the final centroid and tells if the final output was reached due to convergence or not. Then for the second variation, it runs a map only job that assigns each data point to their respective cluster. 
+
+E Visual Explanation-
 
 
 ### 2. Conducting Experiments & Performance Analysis
@@ -1296,10 +1306,15 @@ As part d and e's changes don't affect what kinds of centroids we get, I will no
 
 
 # Ryker Germain
-I created the visualizations for the different centroids in part 2.2,
-in accordance with part D. I used JavaFX to convert the 4D data into parallel
-coordinates laid side-by-side. 
+I created the visualizations for the different centroids in part 2.2
+in accordance with part 3D. I used JavaFX to convert the 4D data into parallel
+coordinates laid side-by-side. I did this rather than use some sort of PCA because 
+I thought it to be the most methodologically sound idea that preserved as much detail
+from the original data as possible. I chose to scale each axis on their individual
+minimum and maximum rather than a global value because I didn't want the KMeans clusters to bias
+towards the dimension with the largest values. 
 
+Each visual and the accompanying description can be found above in their respective sections in 2.2. 
 
 
 ## Run the PIG Scripts
