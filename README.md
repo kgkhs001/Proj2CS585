@@ -2,7 +2,7 @@
 
 # Krishna Garg
 #### AI Usage
-For AI Usage I had AI make the template code for the map reduce. This code is readily available on the internet. It also helped me think out ideas about how to implement the combiner but the rest of the logic was my own. 
+For AI Usage I had AI make the template code for the map reduce. This code is readily available on the internet. It also helped me think out ideas about how to implement the combiner but the rest of the logic was my own. We used AI on task H because it was not finishing properly due to the huge amounts of data that were being processed. 
 
 ### Task A Output (Krishna)
 Note that I only made it dump to the stdout and not save to a file. But the save to file functionality is commented.

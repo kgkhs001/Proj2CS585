@@ -96,7 +96,7 @@ public class KMeansOutputVariations extends Configured implements Tool {
                 x += Double.parseDouble(valueString[1]);
                 y += Double.parseDouble(valueString[2]);
                 z += Double.parseDouble(valueString[3]);
-                count += Integer.parseInt(valueString[4]); // Add up the partial counts
+                count += Integer.parseInt(valueString[4]); 
             }
             
             context.write(key, new Text(w + "," + x + "," + y + "," + z + "," + count));
