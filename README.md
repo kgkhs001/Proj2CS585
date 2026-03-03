@@ -1,8 +1,10 @@
 # Proj2CS585
 
-# Krishna Garg
-#### AI Usage
+# AI Usage
+#### Krishna Garg
 For AI Usage I had AI make the template code for the map reduce. This code is readily available on the internet. It also helped me think out ideas about how to implement the combiner but the rest of the logic was my own. We used AI on task H because it was not finishing properly due to the huge amounts of data that were being processed. 
+#### Ryker Germain
+I used AI to help explain the syntax of Pig code. I also used it to help guide me in the JavaFX documentation so I could properly execute the ideas I had, as I had never used the library before. 
 
 ### Task A Output (Krishna)
 Note that I only made it dump to the stdout and not save to a file. But the save to file functionality is commented.
@@ -698,25 +700,27 @@ root@810b433b1ffe:/home/ds503/shared_folder/Proj2/Task 2/2.2/target#
 
 F - Explanation and Experiments
 ### 1. Explanations
-A - This is the base k means algorithms using the map reduce methods it only runs the algorithm once. What it does is iterate through each point and compare the distance of that data point to the centroids. It then assigns the key value pair as <Centroid, data point>. This key value pair is, at this point, sent to shuffle and sort where it is then sent to the reducer. The reducer receives input formatted as such, <Centroid, List[Data points]>. The reducer then averages out the w,x,y,z values for all the points in the list and then assigns that newly calculated average point as the centroid. 
+A - This is the base k means algorithms using the map reduce methods it only runs the algorithm once. What it does is iterate through each point and compare the distance of that data point to the centroids. It then assigns the key value pair as <Centroid, data point>. This key value pair is, at this point, sent to shuffle and sort where it is then sent to the reducer. The reducer receives input formatted as such, <Centroid, List[Data points]>. The reducer then averages out the w,x,y,z values for all the points in the list and then assigns that newly calculated average point as the centroid.
 
-A Visual Explanation- 
+![img.png](img.png)
 
 B - This does exactly what a does but instead of running just once, it runs as many times as the user specifies in the terminal input. So if you input 5 into the terminal then the Map Reduce KMeans will run 5 times. It is the exact same algorithm the only major code changes are to the run function. Since we are now writing to different files each time the program loops, you have to get the new centroids from the newly outputted file. These new centroids are now passed in as input on the next iteration. The final output can be seen at file /output/...-(input -1)/part-r-0000.
 
-B Visual Explanation-
+![img_1.png](img_1.png)
 
 C - This is a build on part b but instead of going through every iteration no matter what, it stops and doesn't proceed with the next iteration if the newly formulated centroids are within 0.1 of the previous centroids. This is then outputted to the final file as in the previous algorithm.
 
-C Visual Explanation- Same data as B
+This query is a restructured version of B, so the output is the same.
 
 D - This is the same as the previous algorithms, but it includes a combiner which functions as a preprocessor to the reducer. Instead of passing in a list of points with the centroid as the key what we pass in after the combiner is <Centroid, {sum of the w,x,y,z points with the count appended}>
 
-D Visual Explanation-
+![img_2.png](img_2.png)
 
 E - This formats the file output to just the final centroid and tells if the final output was reached due to convergence or not. Then for the second variation, it runs a map only job that assigns each data point to their respective cluster. 
 
-E Visual Explanation- just 1 variation
+This is the visualization that converged in variation 1.
+
+![img_3.png](img_3.png)
 
 
 ### 2. Conducting Experiments & Performance Analysis
@@ -1001,13 +1005,13 @@ Found 1 items
 Found 2 items
 -rw-r--r--   1 root supergroup          0 2026-02-24 07:23 /output/kmeans_output_variations-variation2/_SUCCESS
 -rw-r--r--   1 root supergroup     516034 2026-02-24 07:23 /output/kmeans_output_variations-variation2/part-m-00000
-
+```
 
 Then for the second run we had 10 clusters (2x more than the last run) and ran the same command:
 hadoop jar task2-2-1.0-SNAPSHOT.jar ds503.task2.c_early_term.KMeansEarlyTermination ./Proj2/tuples.csv /output/kmeans_early ./Proj2/tuples_2.csv 100
 
 This time it ran all iterations of the program, since there are more clusters. 
-
+```
 ^Croot@810b433b1ffe:/home/ds503/shared_folder/Proj2/Task 2/2.2/target# hdfs dfs -ls /output/
 Found 100 items
 drwxr-xr-x   - root supergroup          0 2026-02-24 20:01 /output/kmeans_early-0
@@ -1264,7 +1268,6 @@ Let's try 1000 centers, 10 iterations
 
 ```
 
-
 Numbers are still not looking good, as bigger s indicative of better cluster structure. This is starting to get concerning. 
 
 So here's what we'll do for part c. We'll work with 500 centroids, set this for 100 iterations, but exit at threshold 100 (points are pretty far from each other).
@@ -1316,11 +1319,20 @@ from the original data as possible. I chose to scale each axis on their individu
 minimum and maximum rather than a global value because I didn't want the KMeans clusters to bias
 towards the dimension with the largest values. 
 
-Each visual and the accompanying description can be found above in their respective sections in 2.2. 
+Each visual can be found above in their respective sections in 2.2. 
 
-pass file location in as arg
+If you want to run the code to test it, ensure that you pass in the file path of the centroid data in the terminal. Each of 
+the 4 Viz java files is nearly identical and were created for ease of use. 
 
-no C because same as B
+### Understanding & Interpretation of the Visuals
+Each colored line represents 1 centroid (there are 5 lines because we used 5 centroids). I will use the visual below (from A)
+as my example on how I understand these visuals.
+1. The chartreuse and purple lines start near the max of W and drop to the min of X. This indicates an inverse relationship. 
+2. 4/5 of the centroids group towards to max of  Y, despite being quite different elsewhere. This indicates an agreement on that dimension and that it is a significant feature. 
+3. There are no lines with any relative flatness/eveness. This means the data has a lot of extreme characteristics.
+4. The blue and purple lines are perpendicular between dimensions W & Z. This indicates a strong negative correlation between the axes.
+
+![img.png](img.png)
 
 ## Run the PIG Scripts
 
